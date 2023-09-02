@@ -1,0 +1,2 @@
+# TYP
+Esolang tangential learning
