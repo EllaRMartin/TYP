@@ -4,19 +4,26 @@
         <input type = "text" id = "input" placeholder="Enter text here" oninput="getScores()">
         <p id = "output"></p><br>
         <p id = "check"></p>
+        <canvas id="myCanvas" width="300" height="150" style="border:1px solid grey"></canvas>
 
         </p>
         <script>
             function getScore(total, current)
             { 
                 let i = current.charCodeAt(0) - 65;
-
                 const scrabble = [1,3,3,2,1,4,2,4,1,8,5,1,3,1,1,3,10,1,1,1,1,4,4,8,4,1];
-                
                 
                 if(scrabble[i]) return total + scrabble[i]; 
                 else return total;
                 
+            }
+            function displayCodel(scores)
+            {
+                let colours = ["red", "yellow", "green", "blue", "purple"];
+                const c = document.getElementById("myCanvas");
+                const ctx = c.getContext("2d");
+                ctx.fillStyle = colours[scores.pop()];
+                ctx.fillRect(10, 10, 50, 50);
             }
             function getScores()
             {
@@ -27,9 +34,10 @@
                 
                 words.forEach(word => { 
                     scores.push(word.toUpperCase().split("").reduce(getScore,0));
-                    document.getElementById("check").innerHTML = JSON.stringify(scores.pop());
+                    document.getElementById("check").innerHTML = JSON.stringify(scores);
                 });
-
+                
+                displayCodel(scores);
             }
             
         </script>
