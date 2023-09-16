@@ -17,13 +17,16 @@
                 else return total;
                 
             }
-            function displayCodel(scores)
+            function displayCodel(score, i)
             {
                 let colours = ["red", "yellow", "green", "blue", "purple"];
-                const c = document.getElementById("myCanvas");
-                const ctx = c.getContext("2d");
-                ctx.fillStyle = colours[scores.pop()];
-                ctx.fillRect(10, 10, 50, 50);
+    
+                ctx().fillStyle = colours[score%colours.length];
+                ctx().fillRect(10*i, 10, 50, 50);
+            }
+            function ctx()
+            {
+                return document.getElementById("myCanvas").getContext("2d");
             }
             function getScores()
             {
@@ -37,7 +40,8 @@
                     document.getElementById("check").innerHTML = JSON.stringify(scores);
                 });
                 
-                displayCodel(scores);
+                scores.forEach(displayCodel);
+                
             }
             
         </script>
