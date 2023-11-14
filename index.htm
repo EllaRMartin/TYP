@@ -1,12 +1,43 @@
 <!DOCTYPE html>
 <html>
+    <style>
+        .beatnik{
+            width: 50%;
+            height: 100%;
+            float: left;
+        }
+        #input{
+            width: 100%;
+            height: 80%;
+        }
+        .piet{
+            width: 50%;
+            height: 50%;
+            float: right;
+        }
+        #myCanvas{
+            width : 100%;
+            height: 100%;
+        }
+        .result{
+            width: 50%;
+            height:  50%;
+            float: inline-end;
+        }
+    </style>
     <body>
-        <input type = "text" id = "input" placeholder="Enter text here" oninput="getScores()">
-        <p id = "output"></p><br>
-        <p id = "check"></p>
-        <canvas id="myCanvas" width="300" height="150" style="border:1px solid grey"></canvas>
-
-        </p>
+        <div class = "beatnik">
+            <input type = "text" id = "input" placeholder="Enter text here" oninput="getScores()">
+            <p id = "output"></p>
+            <p id = "check"></p>
+        </div>
+        <div class = "piet">
+            <canvas id="myCanvas" width=50% height=100% style="border:1px solid grey"></canvas>
+        </div>
+        <div class= "result">
+            <p>Do stuff</p>
+        </div>
+        
         <script>
             function getScore(total, current)
             { 
@@ -20,13 +51,17 @@
             function displayCodel(score, i)
             {
                 let colours = ["red", "yellow", "green", "blue", "purple"];
-    
+                
                 ctx().fillStyle = colours[score%colours.length];
-                ctx().fillRect(10*i, 10, 50, 50);
+                ctx().fillRect(10*i, 10, 10, 10);
             }
             function ctx()
             {
                 return document.getElementById("myCanvas").getContext("2d");
+            }
+            function getCanvasSize(noCodels)
+            {
+                return Math.round(Math.pow(noCodels,2))
             }
             function getScores()
             {
@@ -40,6 +75,7 @@
                     document.getElementById("check").innerHTML = JSON.stringify(scores);
                 });
                 
+
                 scores.forEach(displayCodel);
                 
             }
