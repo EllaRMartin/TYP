@@ -26,7 +26,6 @@
 
 */
 #beatnikInput{
-    background-color: blueviolet;
     
     box-sizing: border-box;
     /*resize: none;*/
@@ -37,8 +36,7 @@
     outline-width: 0px;
 }
 #pietCanvas{
-    background-color: aqua;
-    
+
     box-sizing: border-box;
 
     border-style: inset;

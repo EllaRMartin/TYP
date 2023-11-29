@@ -12,7 +12,6 @@ function displayCodel(score, i)
     let colours = ["red", "yellow", "green", "blue", "purple"];
     var codelWidth = 10;
     ctx().fillStyle = colours[score%colours.length];
-    ctx().fillRect(codelWidth*i, codelWidth, codelWidth, codelWidth);
 }
 function getCanvasSize(noCodels)
 {
@@ -21,25 +20,31 @@ function getCanvasSize(noCodels)
 function getScores()
 {
     let scores = [];
-    let str = document.getElementById("beatnikInput").value;
+    let str = document.getElementById("beatnikInput").value; //get user input
 
     let words = str.split(" ");
-    document.getElementById("output").innerHTML = JSON.stringify(words);
+    //document.getElementById("output").innerHTML = JSON.stringify(words);
     
     words.forEach(word => { 
         scores.push(word.toUpperCase().split("").reduce(getScrabbleScore,0));
         document.getElementById("output").innerHTML = JSON.stringify(scores);
     });
-    
-
     repaint(scores)
 }
 function repaint(scores)
 {
-    
-    scores.forEach(score,i => {
-        displayCodel(score,i)
+
+    let colours = ["red","yellow","green","cyan","blue","magenta"]
+    let canvas = document.getElementById("pietCanvas")
+    let ctx = canvas.getContext("2d")
+    let codelWidth = canvas.width/scores.length;
+    //document.getElementById("output").innerHTML = JSON.stringify(colours[scores[0]]);
+    scores.forEach((score, i)=>{
+        if(score ==0) fillStyle = "white";
+        else ctx.fillStyle = colours[score%colours.length]
+        ctx.fillRect(i*codelWidth,0,codelWidth,codelWidth);
     });
+    
 }
 function setCanvasSize(){
     var canvas = document.getElementById("pietCanvas");
