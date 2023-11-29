@@ -34,7 +34,7 @@ function repaint(scores)
     //document.getElementById("output").innerHTML = JSON.stringify(colours[scores[0]]);
     scores.forEach((score, i)=>{
         if(score==0) fillStyle = "#FFFFFF";
-        else ctx.fillStyle = colours[score%colours.length][score%colours[0].length]
+        else ctx.fillStyle = colours[Math.floor(score/colours[0].length)%colours.length][score%colours[0].length]
         ctx.fillRect(i*codelWidth,0,codelWidth,codelWidth);
     });
     
