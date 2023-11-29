@@ -7,16 +7,6 @@ function getScrabbleScore(total, current)
     else return total;
     
 }
-function displayCodel(score, i)
-{
-    let colours = ["red", "yellow", "green", "blue", "purple"];
-    var codelWidth = 10;
-    ctx().fillStyle = colours[score%colours.length];
-}
-function getCanvasSize(noCodels)
-{
-    return Math.round(Math.pow(noCodels,2))
-}
 function getScores()
 {
     let scores = [];
