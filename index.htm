@@ -1,19 +1,24 @@
 <!DOCTYPE html>
-<html>
-    
+<html lang="en">
+    <head>
+        <link rel = "stylesheet" href = "style.css">
+        <script src="script.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            Pietnik
+        </title>
+    </head>
     <body>
-        <div class = "beatnik">
-            <input type = "text" id = "input" placeholder="Enter text here" oninput="getScores()">
-            <p id = "output"></p>
-            <p id = "check"></p>
+        <div class= "flex-container">
+            <div class = "flex-item">
+                <textarea id = "beatnikInput" value="Enter text here"></textarea>
+            </div>
+            <div class = "flex-item">
+                <canvas id="pietCanvas" ></canvas> 
+            </div>
+            <div class="flex-item"><p id = "output"></p></div>
         </div>
-        <div class = "piet">
-            <canvas id="myCanvas" width=50% height=100% style="border:1px solid grey"></canvas>
-        </div>
-        <div class= "result">
-            <p>Do stuff</p>
-        </div>
-        
     </body>
 </html>
 
