@@ -78,24 +78,41 @@ function getColourChange(val1, val2)
 {
     changeInHue = Colours.getHue(val2)-Colours.getHue(val1);
     changeInLightness = Colours.getLightness(val2) - Colours.getLightness(val1);
-    return [changeInHue,changeInLightness]
+    return [changeInLightness,changeInHue]
 }
 
 function executePiet()
 {
     //document.getElementById("output").innerHTML = "running"
     let scores = getScores(); 
-    let changes = [];
+    let stack = []; let changes = []
     let colourBlockCount = 1;
     for(let i = 0;i < scores.length-1;i++)
     {
         let change = getColourChange(scores[i], scores[i+1]);
+        changes.push(change);
         if(change[0] == 0 && change[1] == 0) colourBlockCount++; //if no change in hue or lightness, increment block size counter
-        else colourBlockCount = 1; //if new colour block, reset counter
-        changes.push(colourBlockCount);
+        else  //if new colour block
+        {
+            switch(change[0]) //chose operation by change in lightness
+            {
+                case 0:
+                    
+                break;
+                case 1:
+                    switch(change[1]) //choose operation by change in hue
+                    {
+                        case 0: //Push size of current block to stack
+                            stack.push(colourBlockCount);
+                        break;
+                    }
+                break;
+            }
+            colourBlockCount = 1; //reset counter
+        }
     }
-    document.getElementById("output").innerHTML = JSON.stringify(changes);
-
+    document.getElementById("output").innerHTML = JSON.stringify(stack);
+    console.log(changes)
 }
 
 function init()
