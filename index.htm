@@ -10,16 +10,21 @@
         </title>
     </head>
     <body>
-        <div class= "flex-container">
+        <div class= "horizontal-flex-container">
             <div class = "flex-item">
                 <textarea id = "beatnikInput" value="Enter text here"></textarea>
             </div>
             <div class = "flex-item">
-                <canvas id="pietCanvas" ></canvas> 
+                <div class="vertical-flex-item">
+                    <canvas id="pietCanvas" ></canvas> 
+                    <button type="button" id = "runButton">Run</button>
+                    <p id = "stack"></p>
+                    <p id = "output"></p>
+                </div>
+                
             </div>
         </div>
-        <p id = "output"></p>
-        <button type="button" id = "runButton">Run</button>
+        
     </body>
 </html>
 
