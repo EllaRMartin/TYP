@@ -121,6 +121,16 @@ function executePiet()
                             else if (num2 == null) stack.push(num1);
                             else stack.push(num2 / num1);
                             break;
+                        case 3: //GREATER If second value is greater that top, push 1, else push 0
+                            console.log("GREATER")
+                            num1 = stack.pop();
+                            num2 = stack.pop();
+                            if(num1 == null && num2 == null) console.log("Comparison failed: Tried to pop from empty stack");
+                            else if(num1 == null) stack.push(num2);
+                            else if (num2 == null) stack.push(num1);
+                            else if (num2 > num1) stack.push(1);
+                            else stack.push(0);
+                            break;
                     }
                     break;
                 case 1:
@@ -141,7 +151,7 @@ function executePiet()
                             console.log("MOD")
                             num1 = stack.pop();
                             num2 = stack.pop();
-                            if(num1 == null && num2 == null) console.log("Division failed: Tried to pop from empty stack");
+                            if(num1 == null && num2 == null) console.log("Modulo failed: Tried to pop from empty stack");
                             else if(num1 == null) stack.push(num2);
                             else if (num2 == null) stack.push(num1);
                             else stack.push(num2 % num1);
