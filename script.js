@@ -131,6 +131,15 @@ function executePiet()
                             else if (num2 > num1) stack.push(1);
                             else stack.push(0);
                             break;
+                        case 4: //DUPLICATE push copy of top value to stack
+                            console.log("DUPLICATE");
+                            num1 = stack.pop();
+                            if(num1!==null){
+                                stack.push(num1);
+                                stack.push(num1);
+
+                            }
+                        break;
                     }
                     break;
                 case 1:
@@ -156,6 +165,8 @@ function executePiet()
                             else if (num2 == null) stack.push(num1);
                             else stack.push(num2 % num1);
                             break;
+                        case 3://POINTER increment dp
+                            break;
                     }
                     break;
                 case 2:
@@ -178,6 +189,8 @@ function executePiet()
                             num1 = stack.pop();
                             if(num1 == 0) stack.push(1);
                             else stack.push(0);
+                            break;
+                        case 3: //increment cc
                             break;
                     }
                     break;
