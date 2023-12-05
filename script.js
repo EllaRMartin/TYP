@@ -20,6 +20,14 @@ class Colours
     {
         return this.colourcodes[lightness][hue];
     }
+    static getColourChange(val1, val2)
+    {
+        let changeInHue = Colours.getHue(val2)-Colours.getHue(val1);
+        if(changeInHue < 0) changeInHue = this.colourcodes[0].length + changeInHue;
+        let changeInLightness = Colours.getLightness(val2) - Colours.getLightness(val1);
+        if(changeInLightness < 0) changeInLightness = this.colourcodes.length + changeInLightness;
+        return [changeInLightness,changeInHue]
+    }
 }
 
 function getScrabbleScore(total, current)
@@ -74,45 +82,104 @@ function setBeatnikInputBoxSize(){
     beatBox.rows = window.innerHeight/sz;
     //beatBox.value = window.innerWidth
 }
-function getColourChange(val1, val2)
-{
-    changeInHue = Colours.getHue(val2)-Colours.getHue(val1);
-    changeInLightness = Colours.getLightness(val2) - Colours.getLightness(val1);
-    return [changeInLightness,changeInHue]
-}
 
 function executePiet()
 {
     //document.getElementById("output").innerHTML = "running"
     let scores = getScores(); 
-    let stack = []; let changes = []
+    let stack = []; let changes = [];
+    //let registers = [];
     let colourBlockCount = 1;
     for(let i = 0;i < scores.length-1;i++)
     {
-        let change = getColourChange(scores[i], scores[i+1]);
+        let change = Colours.getColourChange(scores[i], scores[i+1]);
         changes.push(change);
         if(change[0] == 0 && change[1] == 0) colourBlockCount++; //if no change in hue or lightness, increment block size counter
         else  //if new colour block
         {
+            let num2 = null;
+            let num1 = null;
             switch(change[0]) //chose operation by change in lightness
             {
                 case 0:
-                    
-                break;
+                    switch(change[1])
+                    {
+                        case 1: //ADD Pop top two numbers, push sum to stack 
+                            num1 = stack.pop();
+                            num2 = stack.pop();
+                            if(num1 == null && num2 == null) console.log("Addition failed: Tried to pop from empty stack");
+                            else if(num1 == null) stack.push(num2);
+                            else if (num2 == null) stack.push(num1);
+                            else stack.push(num2+num1);
+                            break;
+                        case 2: //DIV Pop top two numbers, push quotient to stack (bottom/top)
+                            console.log("DIV")
+                            num1 = stack.pop();
+                            num2 = stack.pop();
+                            if(num1 == null && num2 == null) console.log("Division failed: Tried to pop from empty stack");
+                            else if(num1 == null) stack.push(num2);
+                            else if (num2 == null) stack.push(num1);
+                            else stack.push(num2 / num1);
+                            break;
+                    }
+                    break;
                 case 1:
                     switch(change[1]) //choose operation by change in hue
                     {
                         case 0: //Push size of current block to stack
                             stack.push(colourBlockCount);
                         break;
+                        case 1: //SUB Pop top two numbers, push difference to stack (bottom-top)
+                            num1 = stack.pop();
+                            num2 = stack.pop();
+                            if(num1 == null && num2 == null) console.log("Subtraction failed: Tried to pop from empty stack");
+                            else if(num1 == null) stack.push(num2);
+                            else if (num2 == null) stack.push(num1);
+                            else stack.push(num2 - num1);
+                            break;
+                        case 2: //MOD Pop top two numbers, push remainder to stack (bottom/top)
+                            console.log("MOD")
+                            num1 = stack.pop();
+                            num2 = stack.pop();
+                            if(num1 == null && num2 == null) console.log("Division failed: Tried to pop from empty stack");
+                            else if(num1 == null) stack.push(num2);
+                            else if (num2 == null) stack.push(num1);
+                            else stack.push(num2 % num1);
+                            break;
                     }
-                break;
+                    break;
+                case 2:
+                    switch(change[1])
+                    {
+                        case 0: //Pop top value from stack
+                            stack.pop();
+                        break;
+                        case 1: //MULT Pop top two numbers, push product to stack 
+                            console.log("MULT")
+                            num1 = stack.pop();
+                            num2 = stack.pop();
+                            if(num1 == null && num2 == null) console.log("Multiplication failed: Tried to pop from empty stack");
+                            else if(num1 == null) stack.push(num2);
+                            else if (num2 == null) stack.push(num1);
+                            else stack.push(num2 * num1);
+                            break;
+                        case 2: //NOT Pop top value from stack, if 0 push 1, else push 0
+                            console.log("NOT")
+                            num1 = stack.pop();
+                            if(num1 == 0) stack.push(1);
+                            else stack.push(0);
+                            break;
+                    }
+                    break;
+                    
             }
             colourBlockCount = 1; //reset counter
         }
     }
-    document.getElementById("output").innerHTML = JSON.stringify(stack);
-    console.log(changes)
+    document.getElementById("stack").innerHTML = JSON.stringify(stack);
+    document.getElementById("output").innerHTML = JSON.stringify(changes);
+
+    //console.log(changes)
 }
 
 function init()
