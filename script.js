@@ -86,10 +86,13 @@ function executePiet()
     //document.getElementById("output").innerHTML = "running"
     let scores = getScores(); 
     let changes = [];
+    let colourBlockCount = 1;
     for(let i = 0;i < scores.length-1;i++)
     {
         let change = getColourChange(scores[i], scores[i+1]);
-        changes.push(change);
+        if(change[0] == 0 && change[1] == 0) colourBlockCount++; //if no change in hue or lightness, increment block size counter
+        else colourBlockCount = 1; //if new colour block, reset counter
+        changes.push(colourBlockCount);
     }
     document.getElementById("output").innerHTML = JSON.stringify(changes);
 
