@@ -45,9 +45,13 @@
     outline-width: 0px;
 }
 
-.flex-container{
+.horizontal-flex-container{
     display: flex;
     flex-direction: row;
+}
+.vertical-flex-item{
+    display: flex;
+    flex-direction: column;
 }
 
 .flex-item{
