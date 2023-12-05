@@ -1,3 +1,27 @@
+
+class Colours 
+{
+    constructor(){
+                    
+    }
+    static // red     yellow    green      cyan      blue     magenta
+     colourcodes = [["#C00000","#C0C000","#00C000","#00C0C0","#0000C0","#C000C0"],//dark colours
+            ["#FF0000","#FFFF00","#00FF00","#00FFFF","#0000FF","#FF00FF"],//bright colours
+            ["#FFC0C0","#FFFFC0","#C0FFC0","#C0FFFF","#C0C0FF","#FFC0FF"]];//light colours
+    static getHue(scrabbleScore)
+    {
+        return scrabbleScore%this.colourcodes[0].length;
+    }
+    static getLightness(scrabbleScore)
+    {
+        return Math.floor(scrabbleScore/this.colourcodes[0].length)%this.colourcodes.length;
+    }
+    static getColour(lightness, hue)
+    {
+        return this.colourcodes[lightness][hue];
+    }
+}
+
 function getScrabbleScore(total, current)
 { 
     let i = current.charCodeAt(0) - 65;
@@ -16,25 +40,21 @@ function getScores()
     //document.getElementById("output").innerHTML = JSON.stringify(words);
     
     words.forEach(word => { 
-        scores.push(word.toUpperCase().split("").reduce(getScrabbleScore,0));
+        if(word != "") scores.push(word.toUpperCase().split("").reduce(getScrabbleScore,0));
         document.getElementById("output").innerHTML = JSON.stringify(scores);
     });
     repaint(scores)
     return scores;
 }
+
 function repaint(scores)
 {
-                    // red     yellow    green      cyan      blue     magenta
-    let colours = [["#C00000","#C0C000","#00C000","#00C0C0","#0000C0","#C000C0"],//dark colours
-                   ["#FF0000","#FFFF00","#00FF00","#00FFFF","#0000FF","#FF00FF"],//bright colours
-                   ["#FFC0C0","#FFFFC0","#C0FFC0","#C0FFFF","#C0C0FF","#FFC0FF"]]//light colours
-
     let canvas = document.getElementById("pietCanvas")
     let ctx = canvas.getContext("2d")
     let codelWidth = canvas.width/scores.length;
-    //document.getElementById("output").innerHTML = JSON.stringify(colours[scores[0]]);
     scores.forEach((score, i)=>{
-        if(score!=0)  ctx.fillStyle = colours[Math.floor(score/colours[0].length)%colours.length][score%colours[0].length]
+        document.getElementById("output").innerHTML
+        if(score!=0)  ctx.fillStyle = Colours.getColour(Colours.getLightness(score),Colours.getHue(score))
         else ctx.fillstyle = "white"
         ctx.fillRect(i*codelWidth,0,codelWidth,codelWidth);
     });
@@ -43,7 +63,7 @@ function repaint(scores)
 function setCanvasSize(){
     var canvas = document.getElementById("pietCanvas");
     canvas.width = window.innerWidth/2;
-    canvas.height = window.innerHeight;
+    canvas.height = window.innerHeight/2;
 
 }
 function setBeatnikInputBoxSize(){
@@ -52,12 +72,12 @@ function setBeatnikInputBoxSize(){
     let sz = compStyle.getPropertyValue("font-size");
     beatBox.cols = window.innerWidth/(2*sz);
     beatBox.rows = window.innerHeight/sz;
-    beatBox.value = window.innerWidth
+    //beatBox.value = window.innerWidth
 }
 function getColourChange(val1, val2)
 {
-    changeInHue = (val2%5)-(val1%5);
-    changeInLightness = Math.floor(val2/5) - Math.floor(val1/5);
+    changeInHue = Colours.getHue(val2)-Colours.getHue(val1);
+    changeInLightness = Colours.getLightness(val2) - Colours.getLightness(val1);
     return [changeInHue,changeInLightness]
 }
 
@@ -74,14 +94,14 @@ function executePiet()
     document.getElementById("output").innerHTML = JSON.stringify(changes);
 
 }
+
 function init()
 {
     document.getElementById("beatnikInput").addEventListener("resize",setBeatnikInputBoxSize);
-    document.getElementById("beatnikInput").addEventListener("input",getScores);
     document.getElementById("pietCanvas").addEventListener("resize",setCanvasSize);
     setBeatnikInputBoxSize();
     setCanvasSize();
-
+    document.getElementById("beatnikInput").addEventListener("input",getScores);
     document.getElementById("runButton").addEventListener("click",executePiet);
 }
 
