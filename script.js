@@ -142,10 +142,11 @@ function executePiet()
                                 stack.push(num1);
                              }
                             break;
-                        case 4://user input char
+                        case 5://user input char
                             console.log("INPUT CHAR");
-                            char = prompt("Enter a character").charCodeAt(0);
-                            if(char!= null) stack.push(num);
+                            char = prompt("Enter a character");
+                            char = char.charCodeAt(0);
+                            if(char!= null) stack.push(char);
                             break;
                     }
                     break;
