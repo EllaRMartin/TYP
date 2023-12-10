@@ -137,16 +137,16 @@ function executePiet()
                         case 4: //DUPLICATE push copy of top value to stack
                             console.log("DUPLICATE");
                             num1 = stack.pop();
-                            if(num1!==null){
+                            if(num1!=null){
                                 stack.push(num1);
                                 stack.push(num1);
                              }
                             break;
-                        // case 4://user input char
-                        //     console.log("INPUT CHAR");
-                        //     num = parseInt(prompt("Enter a character"));
-                        //     if(num!= NaN) stack.push(num);
-                        //     break;
+                        case 4://user input char
+                            console.log("INPUT CHAR");
+                            char = prompt("Enter a character").charCodeAt(0);
+                            if(char!= null) stack.push(num);
+                            break;
                     }
                     break;
                 case 1:
@@ -230,6 +230,7 @@ function executePiet()
                             console.log("INPUT NUM");
                             num = parseInt(prompt("Enter a number"));
                             if(num!= NaN) stack.push(num);
+                            //parse float?
                             break;
                     }
                     break;
