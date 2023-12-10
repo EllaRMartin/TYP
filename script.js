@@ -78,8 +78,11 @@ function setBeatnikInputBoxSize(){
     var beatBox = document.getElementById("beatnikInput");
     let compStyle = window.getComputedStyle(beatBox);
     let sz = compStyle.getPropertyValue("font-size");
-    beatBox.cols = window.innerWidth/(2*sz);
-    beatBox.rows = window.innerHeight/sz;
+    // beatBox.cols = window.innerWidth/(2*sz);
+    // beatBox.rows = window.innerHeight/sz;
+    beatBox.cols = "50%";
+    beatBox.rows = "50%";
+
     //beatBox.value = window.innerWidth
 }
 
@@ -137,9 +140,13 @@ function executePiet()
                             if(num1!==null){
                                 stack.push(num1);
                                 stack.push(num1);
-
-                            }
-                        break;
+                             }
+                            break;
+                        // case 4://user input char
+                        //     console.log("INPUT CHAR");
+                        //     num = parseInt(prompt("Enter a character"));
+                        //     if(num!= NaN) stack.push(num);
+                        //     break;
                     }
                     break;
                 case 1:
@@ -167,6 +174,33 @@ function executePiet()
                             break;
                         case 3://POINTER increment dp
                             break;
+                        case 4:
+                            console.log("ROLL")
+                            num1 = stack.pop(); //number of places to shift
+                            num2 = stack.pop(); //number of items to shift
+                            // let items = []
+                            // if(num1 == null || num2 == null) {
+                            //     console.log("Roll failed: Two not null input values requried")
+                            //     break;
+                            // }
+                            // for(i = 0; i< num2;i++)
+                            // {
+                            //     let item = stack.pop();
+                            //     if(item == null) {
+                            //         console.log("Roll failed: Tried to roll more items than present on stack");
+                            //         i = num2;
+                            //         break;
+                            //     }else items[i] = item;
+                            // }
+                            // for(i = 0; i < num1;i++)
+                            // {
+                            //     let temp = items[items.length-1];//save top item
+                            //     for(i = 1;i<num1;i++)
+                            //     {
+                            //         items[items.length-(i)] = items[items.length-(i+1)];//replace item with previous
+                            //     }
+                            // }
+                            break;
                     }
                     break;
                 case 2:
@@ -191,6 +225,11 @@ function executePiet()
                             else stack.push(0);
                             break;
                         case 3: //increment cc
+                            break;
+                        case 4://user input num
+                            console.log("INPUT NUM");
+                            num = parseInt(prompt("Enter a number"));
+                            if(num!= NaN) stack.push(num);
                             break;
                     }
                     break;
