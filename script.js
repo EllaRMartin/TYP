@@ -245,6 +245,12 @@ function executePiet()
                             if(num!= NaN) stack.push(num);
                             //parse float?
                             break;
+                        case 5://output char
+                            console.log("OUTPUT CHAR");
+                            num = stack.pop()
+                            char = String.fromCharCode(num);
+                            if(char != null) document.getElementById("pietOutput").innerHTML = document.getElementById("pietOutput").innerHTML + char;
+                            break;
                     }
                     break;
                     
