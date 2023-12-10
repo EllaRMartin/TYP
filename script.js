@@ -88,6 +88,12 @@ function setBeatnikInputBoxSize(){
 
 function executePiet()
 {
+    //clear previous outputs
+    document.getElementById("stack").innerHTML = "";
+    document.getElementById("output").innerHTML = "";
+    document.getElementById("pietOutput").innerHTML = "";
+
+
     //document.getElementById("output").innerHTML = "running"
     let scores = getScores(); 
     let stack = []; let changes = [];
@@ -154,8 +160,9 @@ function executePiet()
                     switch(change[1]) //choose operation by change in hue
                     {
                         case 0: //Push size of current block to stack
+                            console.log("PUSH");
                             stack.push(colourBlockCount);
-                        break;
+                            break;
                         case 1: //SUB Pop top two numbers, push difference to stack (bottom-top)
                             num1 = stack.pop();
                             num2 = stack.pop();
@@ -201,6 +208,11 @@ function executePiet()
                             //         items[items.length-(i)] = items[items.length-(i+1)];//replace item with previous
                             //     }
                             // }
+                            break;
+                        case 5://output num
+                            console.log("OUTPUT NUM");
+                            num = stack.pop()
+                            if(num != null) document.getElementById("pietOutput").innerHTML = document.getElementById("pietOutput").innerHTML + num;
                             break;
                     }
                     break;
