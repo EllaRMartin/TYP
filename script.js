@@ -110,8 +110,8 @@ function executePiet()
             let num1 = null;
             switch(change[0]) //chose operation by change in lightness
             {
-                case 0:
-                    switch(change[1])
+                case 0: // no change in lightness 
+                    switch(change[1]) // choose operation by change in hue
                     {
                         case 1: //ADD Pop top two numbers, push sum to stack 
                             num1 = stack.pop();
@@ -156,7 +156,7 @@ function executePiet()
                             break;
                     }
                     break;
-                case 1:
+                case 1: //change in lightness = 1
                     switch(change[1]) //choose operation by change in hue
                     {
                         case 0: //Push size of current block to stack
@@ -182,36 +182,42 @@ function executePiet()
                             break;
                         case 3://POINTER increment dp
                             break;
-                        case 4:
+                        case 4: //aq aqpp aqpp aqpppp aqpppp aqpppp aq aq aq aqpp aqpppp ppp
                             console.log("ROLL")
                             num1 = stack.pop(); //number of places to shift
                             num2 = stack.pop(); //number of items to shift
-                            // let items = []
-                            // if(num1 == null || num2 == null) {
-                            //     console.log("Roll failed: Two not null input values requried")
-                            //     break;
-                            // }
-                            // for(i = 0; i< num2;i++)
-                            // {
-                            //     let item = stack.pop();
-                            //     if(item == null) {
-                            //         console.log("Roll failed: Tried to roll more items than present on stack");
-                            //         i = num2;
-                            //         break;
-                            //     }else items[i] = item;
-                            // }
-                            // for(i = 0; i < num1;i++)
-                            // {
-                            //     let temp = items[items.length-1];//save top item
-                            //     for(i = 1;i<num1;i++)
-                            //     {
-                            //         items[items.length-(i)] = items[items.length-(i+1)];//replace item with previous
-                            //     }
-                            // }
+                            let items = []
+                            if(num1 == null || num2 == null) {
+                                console.log("Roll failed: null value")
+                                break;
+                            }
+                            for(let i = 0; i< num2;i++)
+                            {
+                                let item = stack.pop();
+                                if(item == null) {
+                                    console.log("Roll failed: index out of bounds");
+                                    i = num2;
+                                    break;
+                                }else{ 
+                                    items[i] = item;
+                                    console.log(JSON.stringify(items));
+                                }
+                            }
+                            
+                            for(let i = items.length-num1;i<items.length;i++)
+                            {
+                                stack.push(items[i]);
+                            }
+                            for(let i = 0;i<items.length-num1;i++)
+                            {
+                                stack.push(items[i])
+                            }
+
                             break;
+                            
                         case 5://output num
                             console.log("OUTPUT NUM");
-                            num = stack.pop()
+                            let num = stack.pop()
                             if(num != null) document.getElementById("pietOutput").innerHTML = document.getElementById("pietOutput").innerHTML + num;
                             break;
                     }
