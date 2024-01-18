@@ -44,7 +44,11 @@
     border-radius: 2px;
     outline-width: 0px;
 }
-
+textarea{
+    /*resize: none;*/
+    width: 100%;
+    height:100%;
+}
 .horizontal-flex-container{
     display: flex;
     flex-direction: row;
