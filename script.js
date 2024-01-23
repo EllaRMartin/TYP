@@ -29,6 +29,46 @@ class Colours
         return [changeInLightness,changeInHue]
     }
 }
+class Node{
+    constructor(val){
+        this.val = val;
+        this.left = null;
+        this.right = null;
+    }
+}
+class Tree{
+    constructor(){
+        this.root = null
+        this.numNodes = 0;
+    }
+    insert(val){
+        var newNode = new Node(val)
+        if(this.root==null){//first node in tree
+            this.root = newNode;
+            this.numNodes++;
+            return this //tree
+        }
+        //if tree already has node(s)
+        current = this.root;
+        // pos = val%(this.numNodes+1);//num free spaces = num nodes +1
+        //depth first search
+        pos = val%2;
+        if(pos==1)
+        {
+            do{
+                current = current.left;
+            }while(current.left !== null)
+            current.left = newNode}
+        else if(pos==2)
+        {
+            do{
+                current = current.right;
+            }while(current.right !== null)
+            current.right = newNode
+        }
+    }
+}
+
 
 function getScrabbleScore(total, current)
 { 
@@ -54,7 +94,15 @@ function getScores()
     repaint(scores)
     return scores;
 }
+function paintPiet(scores){
+    //input 1d array of scrabblescores 
+    //return 2d array of codels (as hex colourcodes) and print on screen
 
+    for(let i = 0;i<lengthscores;i++){
+
+    }
+
+}
 function repaint(scores)
 {
     let canvas = document.getElementById("pietCanvas")
@@ -128,6 +176,7 @@ function executePiet()
                             if(num1 == null && num2 == null) console.log("Division failed: Tried to pop from empty stack");
                             else if(num1 == null) stack.push(num2);
                             else if (num2 == null) stack.push(num1);
+                            else if (num1 ==0) console.log("Division failed: tried to divide by zero")
                             else stack.push(num2 / num1);
                             break;
                         case 3: //GREATER If second value is greater that top, push 1, else push 0
@@ -266,10 +315,12 @@ function executePiet()
 
 function init()
 {
+    // resize page elements
     document.getElementById("beatnikInput").addEventListener("resize",setBeatnikInputBoxSize);
     document.getElementById("pietCanvas").addEventListener("resize",setCanvasSize);
     setBeatnikInputBoxSize();
     setCanvasSize();
+    // add event listeners to input elements
     document.getElementById("beatnikInput").addEventListener("input",getScores);
     document.getElementById("runButton").addEventListener("click",executePiet);
 }
