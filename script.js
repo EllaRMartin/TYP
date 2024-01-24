@@ -52,6 +52,7 @@ class Tree{
         current = this.root;
         // pos = val%(this.numNodes+1);//num free spaces = num nodes +1
         //depth first search
+        //currently puts furthest left or furthest right 
         pos = val%2;
         if(pos==1)
         {
@@ -91,16 +92,59 @@ function getScores()
         if(word != "") scores.push(word.toUpperCase().split("").reduce(getScrabbleScore,0));
         document.getElementById("output").innerHTML = JSON.stringify(scores);
     });
-    repaint(scores)
+    repaint(scores) //to be replaced by paintPiet
+    return scores;
+}
+function fillRect(scores, x1,y1, x2, y2,val){
+    //test greater than
+    if(x1>x2){
+        temp = x1;
+        x1=x2;
+        x2=temp;
+    }
+    if(y1>y2){
+        temp = y1;
+        y1=y2;
+        y2=temp;
+    }
+    if(x1<0)x1=0
+    if(y1<0)y1=0
+    if(x2<0)y2=0
+    if(y2<0)y2=0
+    for(let x = x1;x<x2;x++)
+    {
+        for(let y = y1;y<y2;y2++)
+        {
+            scores[x][y] = val;
+        }
+    }
     return scores;
 }
 function paintPiet(scores){
     //input 1d array of scrabblescores 
+    //make a tree
+    //process into image
     //return 2d array of codels (as hex colourcodes) and print on screen
+    leftVertical = 50;
+    rightVertical = 50;
+    leftHorizontal = 50;
+    rightHorizontal = 50;
 
-    for(let i = 0;i<lengthscores;i++){
+    codels = ([0]*100)*100
+    vertical = socres[0];
+    if(scores[0]%2==1)
+    {
 
     }
+    // for(let i = 0;i<lengthscores;i++){
+    //     //insert into tree??
+    //     if(scores[i]%2 == 1)//odd
+    //     {
+    //         leftVertical=scores[i]
+    //     }
+    //     else {//even
+    //     }
+    // }
 
 }
 function repaint(scores)
@@ -143,7 +187,7 @@ function executePiet()
 
 
     //document.getElementById("output").innerHTML = "running"
-    let scores = getScores(); 
+    let scores = getScores(); //may be redundant - could pass to func instead
     let stack = []; let changes = [];
     //let registers = [];
     let colourBlockCount = 1;
