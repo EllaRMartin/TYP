@@ -25,6 +25,22 @@
 }
 
 */
+/* .dropdown{
+    position: relative;
+    display: inline-block;
+    background-color: gray;
+    min-width: 140px;
+}
+.dropdown-content
+{
+    display: none;
+    position: absolute;
+    background-color: lightgray;
+    min-width: 140px;
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+} */
 #beatnikInput{
     
     box-sizing: border-box;
