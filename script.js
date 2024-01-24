@@ -92,10 +92,14 @@ function getScores()
         if(word != "") scores.push(word.toUpperCase().split("").reduce(getScrabbleScore,0));
         document.getElementById("output").innerHTML = JSON.stringify(scores);
     });
-    repaint(scores) //to be replaced by paintPiet
+    //repaint(scores) //to be replaced by paintPiet
+    paintPiet(scores)
     return scores;
 }
-function fillRect(scores, x1,y1, x2, y2,val){
+function paintRect(scores, x1,y1, x2, y2,val){
+    console.log("painting rectangle ...")
+
+    //console.log(JSON.stringify(scores))
     //test greater than
     if(x1>x2){
         temp = x1;
@@ -109,11 +113,11 @@ function fillRect(scores, x1,y1, x2, y2,val){
     }
     if(x1<0)x1=0
     if(y1<0)y1=0
-    if(x2<0)y2=0
-    if(y2<0)y2=0
-    for(let x = x1;x<x2;x++)
+    if(x2>99)y2=99
+    if(y2>99)y2=99
+    for(let x = x1;x<=x2;x++)
     {
-        for(let y = y1;y<y2;y2++)
+        for(let y = y1;y<=y2;y2++)
         {
             scores[x][y] = val;
         }
@@ -121,21 +125,42 @@ function fillRect(scores, x1,y1, x2, y2,val){
     return scores;
 }
 function paintPiet(scores){
+    console.log("painting page ...")
     //input 1d array of scrabblescores 
     //make a tree
     //process into image
     //return 2d array of codels (as hex colourcodes) and print on screen
-    leftVertical = 50;
-    rightVertical = 50;
-    leftHorizontal = 50;
-    rightHorizontal = 50;
+    // leftVertical = 50;
+    // rightVertical = 50;
+    // leftHorizontal = 50;
+    // rightHorizontal = 50;
 
-    codels = ([0]*100)*100
-    vertical = socres[0];
-    if(scores[0]%2==1)
-    {
 
+    //STUFF
+    codels=[];
+    for(let i = 0;i<100;i++){
+        codels[i]=[]
+        for(let j = 0;j<100;j++){
+            codels[i][j]=0;
+        }
     }
+    //console.log(JSON.stringify(codels))
+    vertical = scores[0];
+    if(scores[0]%2==1)//odd
+    {
+        console.log("odd")
+        codels[0][0]=8
+        repaint(codels)
+        //codels = paintRect(codels,0,0,50,100,scores[0]);
+    }
+    // else { //even
+    //     console.log("even")
+
+    //     codels = paintRect(codels,50,0,100,100,scores[0]);
+
+    // }
+
+
     // for(let i = 0;i<lengthscores;i++){
     //     //insert into tree??
     //     if(scores[i]%2 == 1)//odd
@@ -147,18 +172,31 @@ function paintPiet(scores){
     // }
 
 }
-function repaint(scores)
+function repaint(codels)
 {
     let canvas = document.getElementById("pietCanvas")
     let ctx = canvas.getContext("2d")
-    let codelWidth = canvas.width/scores.length;
-    scores.forEach((score, i)=>{
-        document.getElementById("output").innerHTML
-        if(score!=0)  ctx.fillStyle = Colours.getColour(Colours.getLightness(score),Colours.getHue(score))
-        else ctx.fillstyle = "white"
-        ctx.fillRect(i*codelWidth,0,codelWidth,codelWidth);
-    });
-    
+    // let codelWidth = canvas.width/scores.length;
+    // scores.forEach((score, i)=>{
+    //     document.getElementById("output").innerHTML
+    //     if(score!=0)  ctx.fillStyle = Colours.getColour(Colours.getLightness(score),Colours.getHue(score))
+    //     else ctx.fillstyle = "white"
+    //     ctx.fillRect(i*codelWidth,0,codelWidth,codelWidth);
+    // });
+    let codelWidth = canvas.width/100;
+    for(let x = 0;x<=100;x++){
+        for(let y = 0;y<=100;y++){
+            c = codels[x][y]
+            if(c!=0 ){
+                ctx.fillStyle = Colours.getColour(Colours.getLightness(c),Colours.getHue(c))
+            //     console.log(c)
+            // console.log(Colours.getHue(c))
+            }
+            else ctx.fillStyle = "white"
+            ctx.fillRect(x*codelWidth,y*codelWidth,(x*codelWidth)+codelWidth,(y*codelWidth)+codelWidth);
+        }
+
+    }
 }
 function setCanvasSize(){
     var canvas = document.getElementById("pietCanvas");
