@@ -1,2 +1,3 @@
 # TYP
-Esolang tangential learning
+[Esolang tangential learning]
+(https://ellarmartin.github.io/TYP/)
