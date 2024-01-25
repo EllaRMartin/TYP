@@ -151,22 +151,22 @@ function paintPiet(scores){
     let horizontal = 99;
     for(let i = 0;i<scores.length;i++)
     {
-        if(i%2==1)//odd
+        if(i%2==0)//even
         {
-            vertical = Math.floor(10*scores[i]/2)
-            // if(i%3==0)
-            // {
-            //     horizontal = Math.floor(10*scores[i]/2) 
-            // }
-            codels = paintRect(codels,0,0,vertical,100,scores[i]);
+            if(i%4==0) //every other
+            {
+                horizontal = Math.floor(10*scores[i]/2) 
+            }
+            else vertical = Math.floor(10*scores[i]/2)
+            codels = paintRect(codels,vertical,0,100,horizontal,scores[i]);
         }
         else{
-            vertical = Math.floor(10*scores[i]/2)
-            // if(i%3==0)
-            // {
-            //     horizontal = Math.floor(10*scores[i]/2) 
-            // }
-            codels = paintRect(codels,vertical,0,100,100,scores[i]);
+            
+            if(i%4==3)
+            {
+                horizontal = Math.floor(10*scores[i]/2) 
+            }else vertical = Math.floor(10*scores[i]/2)
+            codels = paintRect(codels,0,horizontal,vertical,100,scores[i]);
         }
     }
     
