@@ -10,7 +10,8 @@ class Colours
             ["#FFC0C0","#FFFFC0","#C0FFC0","#C0FFFF","#C0C0FF","#FFC0FF"]];//light colours
     static getHue(scrabbleScore)
     {
-        return scrabbleScore%this.colourcodes[0].length;
+        let hue= scrabbleScore%this.colourcodes[0].length;
+        return hue
     }
     static getLightness(scrabbleScore)
     {
@@ -97,10 +98,12 @@ function getScores()
     return scores;
 }
 function paintRect(scores, x1,y1, x2, y2,val){
-    console.log("painting rectangle ...")
+    //console.log("painting rectangle ...")
 
     //console.log(JSON.stringify(scores))
     //test greater than
+
+    //UPDATE SCORES ARRAY - for execution
     if(x1>x2){
         temp = x1;
         x1=x2;
@@ -113,30 +116,29 @@ function paintRect(scores, x1,y1, x2, y2,val){
     }
     if(x1<0)x1=0
     if(y1<0)y1=0
-    if(x2>99)y2=99
+    if(x2>99)x2=99
     if(y2>99)y2=99
     for(let x = x1;x<=x2;x++)
     {
-        for(let y = y1;y<=y2;y2++)
+        for(let y = y1;y<=y2;y++)
         {
             scores[x][y] = val;
         }
     }
+    //UPDATE CANVAS
+    let canvas = document.getElementById("pietCanvas")
+    let ctx = canvas.getContext("2d")
+    let codelWidth = canvas.width/100;
+
+    if(val!=0&val!=null){
+        //paint a rectange
+        ctx.fillStyle = Colours.getColour(Colours.getLightness(val),Colours.getHue(val))
+    }else ctx.fillStyle = "white"
+    ctx.fillRect(x1*codelWidth,y1*codelWidth,(x2*codelWidth),(y2*codelWidth));
+
     return scores;
 }
 function paintPiet(scores){
-    console.log("painting page ...")
-    //input 1d array of scrabblescores 
-    //make a tree
-    //process into image
-    //return 2d array of codels (as hex colourcodes) and print on screen
-    // leftVertical = 50;
-    // rightVertical = 50;
-    // leftHorizontal = 50;
-    // rightHorizontal = 50;
-
-
-    //STUFF
     codels=[];
     for(let i = 0;i<100;i++){
         codels[i]=[]
@@ -148,28 +150,11 @@ function paintPiet(scores){
     vertical = scores[0];
     if(scores[0]%2==1)//odd
     {
-        console.log("odd")
-        codels[0][0]=8
-        repaint(codels)
-        //codels = paintRect(codels,0,0,50,100,scores[0]);
+        codels = paintRect(codels,0,0,50,100,scores[0]);
     }
-    // else { //even
-    //     console.log("even")
-
-    //     codels = paintRect(codels,50,0,100,100,scores[0]);
-
-    // }
-
-
-    // for(let i = 0;i<lengthscores;i++){
-    //     //insert into tree??
-    //     if(scores[i]%2 == 1)//odd
-    //     {
-    //         leftVertical=scores[i]
-    //     }
-    //     else {//even
-    //     }
-    // }
+    else{
+        codels = paintRect(codels,50,0,100,100,scores[0]);
+    }
 
 }
 function repaint(codels)
@@ -187,7 +172,7 @@ function repaint(codels)
     for(let x = 0;x<=100;x++){
         for(let y = 0;y<=100;y++){
             c = codels[x][y]
-            if(c!=0 ){
+            if(c!=0 & c!= null){
                 ctx.fillStyle = Colours.getColour(Colours.getLightness(c),Colours.getHue(c))
             //     console.log(c)
             // console.log(Colours.getHue(c))
