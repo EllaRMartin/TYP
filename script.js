@@ -139,6 +139,7 @@ function paintRect(scores, x1,y1, x2, y2,val){
     return scores;
 }
 function paintPiet(scores){
+    //new empty codel array
     codels=[];
     for(let i = 0;i<100;i++){
         codels[i]=[]
@@ -146,15 +147,25 @@ function paintPiet(scores){
             codels[i][j]=0;
         }
     }
-    //console.log(JSON.stringify(codels))
-    vertical = scores[0];
-    if(scores[0]%2==1)//odd
+    let vertical = 99;
+    let horizontal = 99;
+    for(let i = 0;i<scores.length;i++)
     {
-        codels = paintRect(codels,0,0,50,100,scores[0]);
+        if(i%2==1)//odd
+        {
+            vertical = Math.floor(10*scores[i]/2)
+            // if(i%3==0)
+            // {
+            //     horizontal = Math.floor(10*scores[0]/2) 
+            // }
+            codels = paintRect(codels,0,0,vertical,100,scores[i]);
+        }
+        else{
+            vertical = Math.floor(10*scores[0]/2)
+            codels = paintRect(codels,vertical,0,100,100,scores[i]);
+        }
     }
-    else{
-        codels = paintRect(codels,50,0,100,100,scores[0]);
-    }
+    
 
 }
 function repaint(codels)
