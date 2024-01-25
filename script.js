@@ -156,12 +156,16 @@ function paintPiet(scores){
             vertical = Math.floor(10*scores[i]/2)
             // if(i%3==0)
             // {
-            //     horizontal = Math.floor(10*scores[0]/2) 
+            //     horizontal = Math.floor(10*scores[i]/2) 
             // }
             codels = paintRect(codels,0,0,vertical,100,scores[i]);
         }
         else{
-            vertical = Math.floor(10*scores[0]/2)
+            vertical = Math.floor(10*scores[i]/2)
+            // if(i%3==0)
+            // {
+            //     horizontal = Math.floor(10*scores[i]/2) 
+            // }
             codels = paintRect(codels,vertical,0,100,100,scores[i]);
         }
     }
