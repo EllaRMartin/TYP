@@ -139,6 +139,10 @@ function paintRect(scores, x1,y1, x2, y2,val){
     return scores;
 }
 function paintPiet(scores){
+    //clear canvas
+    let canvas = document.getElementById("pietCanvas")
+    let ctx = canvas.getContext("2d")
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     //new empty codel array
     codels=[];
     for(let i = 0;i<100;i++){
@@ -147,7 +151,7 @@ function paintPiet(scores){
             codels[i][j]=0;
         }
     }
-    let vertical = 99;
+    let vertical = 50;
     let horizontal = 99;
     for(let i = 0;i<scores.length;i++)
     {
@@ -184,6 +188,8 @@ function repaint(codels)
     //     ctx.fillRect(i*codelWidth,0,codelWidth,codelWidth);
     // });
     let codelWidth = canvas.width/100;
+    
+
     for(let x = 0;x<=100;x++){
         for(let y = 0;y<=100;y++){
             c = codels[x][y]
