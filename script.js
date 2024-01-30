@@ -31,8 +31,9 @@ class Colours
     }
 }
 class Node{
-    constructor(val){
-        this.val = val;
+    constructor(colourcode,percentage){
+        this.colourcode = colourcode;
+        this.percentage = percentage;
         this.left = null;
         this.right = null;
     }
@@ -40,13 +41,13 @@ class Node{
 class Tree{
     constructor(){
         this.root = null
-        this.numNodes = 0;
+        this.depth = 0
     }
-    insert(val){
-        var newNode = new Node(val)
+    insert(colour,percentage){
+        var newNode = new Node(colour,percentage)
         if(this.root==null){//first node in tree
             this.root = newNode;
-            this.numNodes++;
+            this.depth++;
             return this //tree
         }
         //if tree already has node(s)
@@ -54,20 +55,47 @@ class Tree{
         // pos = val%(this.numNodes+1);//num free spaces = num nodes +1
         //depth first search
         //currently puts furthest left or furthest right 
-        pos = val%2;
-        if(pos==1)
-        {
-            do{
-                current = current.left;
-            }while(current.left !== null)
-            current.left = newNode}
-        else if(pos==2)
-        {
-            do{
-                current = current.right;
-            }while(current.right !== null)
-            current.right = newNode
+        for(let d =0;d<this.depth-2;d++){
+            left = current.left;
+            right = current.right
+            // CHECK DEPTH - FILL DEPTH BEFORE MOVING ON?
+            // 1/99% - too small - stop
+            //check child nodes exist
+            if(right != null & left != null)
+            {
+                //compare child nodes 
+                if(left.percentage>right.percentage){
+                    current = current.left;
+                }
+                else{current = current.right;}
+            }else if(right == null){
+                current.right = newNode;
+            }else if(left == null){
+                current.left = newNode;
+            }
         }
+    }
+    traverse()
+    {
+        let current = this.root;
+        let previous = null
+        let traversal = current.percentage;
+        while(current!=null){
+            if(this.left!=null)
+            {
+                traversal+=this.left.percentage
+                previous = current;
+                current = this.left
+            }else if(this.right!=null)
+            {
+                traversal+=this.right.percentage
+                previous = current;
+                current = this.right
+            }else{
+                if(previous != null) current = previous;
+            }
+        }
+        console.log(JSON.stringify(traversal))
     }
 }
 
@@ -173,8 +201,6 @@ function paintPiet(scores){
             codels = paintRect(codels,0,horizontal,vertical,100,scores[i]);
         }
     }
-    
-
 }
 function repaint(codels)
 {
