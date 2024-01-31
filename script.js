@@ -70,8 +70,13 @@ class Tree{
                 else{current = current.right;}
             }else if(right == null){
                 current.right = newNode;
+                this.depth++;
+                return this
             }else if(left == null){
                 current.left = newNode;
+                this.depth++;
+                return this
+
             }
         }
     }
@@ -432,7 +437,11 @@ function executePiet()
 
     //console.log(changes)
 }
-
+function testTree(){
+    let tree = new Tree();
+    //tree = tree.insert(new Node(8,64))
+    //tree.traverse()
+}
 function init()
 {
     // resize page elements
@@ -443,6 +452,7 @@ function init()
     // add event listeners to input elements
     document.getElementById("beatnikInput").addEventListener("input",getScores);
     document.getElementById("runButton").addEventListener("click",executePiet);
+    testTree()
 }
 
 window.onload = init;
