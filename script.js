@@ -36,14 +36,14 @@ class Node{
         this.percentage = percentage;
         this.left = null;
         this.right = null;
-        console.log("Node created: " + this.percentage)
+        //console.log("Node created: " + this.percentage)
     }
 }
 class Tree{
     constructor(){
         this.root = null
         this.depth = 0;
-        console.log("Tree created")
+        //console.log("Tree created")
     }
     
     insert(newNode){
@@ -61,12 +61,12 @@ class Tree{
                 let right = current.right
 
                 if(right==null & left != null){ //insert left
-                    current.left = newNode;break;
-                }
-                else if(left==null & right != null){ //insert right
                     current.right = newNode;break;
                 }
-                else if(right == null && left == null){ //pick side to insert
+                else if(left==null & right != null){ //insert right
+                    current.left = newNode;break;
+                }
+                else if(right == null & left == null){ //pick side to insert
                     current.right = newNode;
                     this.depth++;break;
                 }
@@ -105,7 +105,6 @@ function getScores()
 {
     let scores = [];
     let str = document.getElementById("beatnikInput").value; //get user input
-
     let words = str.split(" ");
     //document.getElementById("output").innerHTML = JSON.stringify(words);
     
@@ -113,49 +112,7 @@ function getScores()
         if(word != "") scores.push(word.toUpperCase().split("").reduce(getScrabbleScore,0));
         document.getElementById("output").innerHTML = JSON.stringify(scores);
     });
-    //repaint(scores) //to be replaced by paintPiet
     paintPiet(scores)
-    return scores;
-}
-function paintRect(scores, x1,y1, x2, y2,val){
-    //console.log("painting rectangle ...")
-
-    //console.log(JSON.stringify(scores))
-    //test greater than
-
-    //UPDATE SCORES ARRAY - for execution
-    if(x1>x2){
-        temp = x1;
-        x1=x2;
-        x2=temp;
-    }
-    if(y1>y2){
-        temp = y1;
-        y1=y2;
-        y2=temp;
-    }
-    if(x1<0)x1=0
-    if(y1<0)y1=0
-    if(x2>99)x2=99
-    if(y2>99)y2=99
-    for(let x = x1;x<=x2;x++)
-    {
-        for(let y = y1;y<=y2;y++)
-        {
-            scores[x][y] = val;
-        }
-    }
-    //UPDATE CANVAS
-    let canvas = document.getElementById("pietCanvas")
-    let ctx = canvas.getContext("2d")
-    let codelWidth = canvas.width/100;
-
-    if(val!=0&val!=null){
-        //paint a rectange
-        ctx.fillStyle = Colours.getColour(Colours.getLightness(val),Colours.getHue(val))
-    }else ctx.fillStyle = "white"
-    ctx.fillRect(x1*codelWidth,y1*codelWidth,(x2*codelWidth),(y2*codelWidth));
-
     return scores;
 }
 function paintPiet(scores){
@@ -171,42 +128,61 @@ function paintPiet(scores){
             codels[i][j]=0;
         }
     }
-    let vertical = 50;
-    let horizontal = 99;
-    for(let i = 0;i<scores.length;i++)
-    {
-        if(i%2==0)//even
-        {
-            if(i%4==0) //every other
-            {
-                horizontal = Math.floor(10*scores[i]/2) 
-            }
-            else vertical = Math.floor(10*scores[i]/2)
-            codels = paintRect(codels,vertical,0,100,horizontal,scores[i]);
-        }
-        else{
-            
-            if(i%4==3)
-            {
-                horizontal = Math.floor(10*scores[i]/2) 
-            }else vertical = Math.floor(10*scores[i]/2)
-            codels = paintRect(codels,0,horizontal,vertical,100,scores[i]);
-        }
+    if(scores.length>0){
+        //PUT SCORES IN TREE
+        let tree = new Tree();
+        scores.forEach(score => tree.insert(new Node(score,getPercentage(score))))
+        // let traversal = tree.traverse(tree.root,[])
+        // console.log(JSON.stringify(traversal))
+
+        //PAINT TREE SCORES ON CANVAS
+        console.log(tree.root.colourcode)
+        if(tree.root!=null)codels = paintRect(codels,0,0,tree.root.percentage,50,tree.root.colourcode)
+        //codels=paintRect(codels,0,0,tree.root.percentage,99,tree.root.score)
     }
 }
+function paintRect(codels, x1,y1, x2, y2,score){
+    //UPDATE SCORES ARRAY - for execution
+    if(x1>x2){temp = x1;x1=x2;x2=temp;}
+    if(y1>y2){temp = y1;y1=y2;y2=temp;}
+    if(x1<0)x1=0
+    if(y1<0)y1=0
+    if(x2>99)x2=99
+    if(y2>99)y2=99
+    //update grid
+    for(let x = x1;x<=x2;x++)
+    {
+        for(let y = y1;y<=y2;y++)
+        {
+            codels[x][y] = score;
+        }
+    }
+    //UPDATE CANVAS
+    let canvas = document.getElementById("pietCanvas")
+    let ctx = canvas.getContext("2d")
+    let codelWidth = canvas.width/100;
+
+    if(score!=0&score!=null){
+        //paint a rectange
+        ctx.fillStyle = Colours.getColour(Colours.getLightness(score),Colours.getHue(score))
+    }else ctx.fillStyle = "white"
+    ctx.fillRect(x1*codelWidth,y1*codelWidth,(x2*codelWidth),(y2*codelWidth));
+
+    return codels;
+}
+function getPercentage(score){
+    let percentage = score*4;
+    if(percentage>99)percentage = 99;
+    else if(percentage<1) percentage = 1;
+    return percentage;
+}
+
+
 function repaint(codels)
 {
     let canvas = document.getElementById("pietCanvas")
     let ctx = canvas.getContext("2d")
-    // let codelWidth = canvas.width/scores.length;
-    // scores.forEach((score, i)=>{
-    //     document.getElementById("output").innerHTML
-    //     if(score!=0)  ctx.fillStyle = Colours.getColour(Colours.getLightness(score),Colours.getHue(score))
-    //     else ctx.fillstyle = "white"
-    //     ctx.fillRect(i*codelWidth,0,codelWidth,codelWidth);
-    // });
     let codelWidth = canvas.width/100;
-    
 
     for(let x = 0;x<=100;x++){
         for(let y = 0;y<=100;y++){
@@ -428,9 +404,9 @@ function testTree(){
     let tree = new Tree();
     tree.insert(new Node(8,1))
     tree.insert(new Node(2,2))
-    tree.insert(new Node(3,3))
+    tree.insert(new Node(3,20))
     tree.insert(new Node(8,4))
-    tree.insert(new Node(2,5))
+    tree.insert(new Node(2,13))
     tree.insert(new Node(3,6))
     tree.insert(new Node(8,7))
     tree.insert(new Node(2,8))
@@ -449,7 +425,7 @@ function init()
     // add event listeners to input elements
     document.getElementById("beatnikInput").addEventListener("input",getScores);
     document.getElementById("runButton").addEventListener("click",executePiet);
-    testTree()
+    //testTree()
 }
 
 window.onload = init;
