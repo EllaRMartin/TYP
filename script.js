@@ -137,7 +137,16 @@ function paintPiet(scores){
 
         //PAINT TREE SCORES ON CANVAS
         console.log(tree.root.colourcode)
-        if(tree.root!=null)codels = paintRect(codels,0,0,tree.root.percentage,50,tree.root.colourcode)
+        let current = tree.root
+        if(current!=null){
+            codels = paintRect(codels,0,0,current.percentage,100,current.colourcode)
+            if(current.right!=null){
+                codels = paintRect(codels,current.percentage,current.right.percentage,100,100,current.right.colourcode)
+            }
+            if(current.left!=null){
+                codels = paintRect(codels,0,0,current.percentage,current.left.percentage,current.left.colourcode)
+            }
+        }
         //codels=paintRect(codels,0,0,tree.root.percentage,99,tree.root.score)
     }
 }
