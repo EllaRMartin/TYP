@@ -72,13 +72,16 @@ class Tree{
                     if(left.percentage>right.percentage){
                         current = current.left; 
                     }else{current = current.right;}
-                }else if(right == null){
+                }else if(right == null & current.percentage<50){
                     current.right = newNode;
                     this.depth++;
+                    console.log("Node inserted to right")
                     return this
                 }else if(left == null){
                     current.left = newNode;
                     this.depth++;
+                    console.log("Node inserted to left")
+
                     return this
 
                 }
