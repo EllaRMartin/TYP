@@ -36,47 +36,52 @@ class Node{
         this.percentage = percentage;
         this.left = null;
         this.right = null;
+        console.log("Node created: " + this.percentage)
     }
 }
 class Tree{
     constructor(){
         this.root = null
-        this.depth = 0
+        this.depth = 0;
+        console.log("Tree created")
     }
-    insert(colour,percentage){
-        var newNode = new Node(colour,percentage)
+    
+    insert(newNode){
+        //var newNode = new Node(colour,percentage)
         if(this.root==null){//first node in tree
             this.root = newNode;
             this.depth++;
-            return this //tree
-        }
-        //if tree already has node(s)
-        current = this.root;
-        // pos = val%(this.numNodes+1);//num free spaces = num nodes +1
-        //depth first search
-        //currently puts furthest left or furthest right 
-        for(let d =0;d<this.depth-2;d++){
-            left = current.left;
-            right = current.right
-            // CHECK DEPTH - FILL DEPTH BEFORE MOVING ON?
-            // 1/99% - too small - stop
-            //check child nodes exist
-            if(right != null & left != null)
-            {
-                //compare child nodes 
-                if(left.percentage>right.percentage){
-                    current = current.left;
-                }
-                else{current = current.right;}
-            }else if(right == null){
-                current.right = newNode;
-                this.depth++;
-                return this
-            }else if(left == null){
-                current.left = newNode;
-                this.depth++;
-                return this
+            console.log("Node successfully inserted ")
+            //return this //tree
+        }else
+        {
+            //if tree already has node(s)
+            let current = this.root;
+            // pos = val%(this.numNodes+1);//num free spaces = num nodes +1
+            //depth first search
+            //currently puts furthest left or furthest right 
+            if(this.depth>0)for(let d =0;d<this.depth;d++){
+                let left = current.left;
+                let right = current.right
+                // CHECK DEPTH - FILL DEPTH BEFORE MOVING ON?
+                // 1/99% - too small - stop
+                //check child nodes exist
+                if(right != null & left != null)//progress through tree
+                {
+                    //compare child nodes 
+                    if(left.percentage>right.percentage){
+                        current = current.left; 
+                    }else{current = current.right;}
+                }else if(right == null){
+                    current.right = newNode;
+                    this.depth++;
+                    return this
+                }else if(left == null){
+                    current.left = newNode;
+                    this.depth++;
+                    return this
 
+                }
             }
         }
     }
@@ -84,20 +89,22 @@ class Tree{
     {
         let current = this.root;
         let previous = null
-        let traversal = current.percentage;
+        let traversal = [];
+        traversal.push(current.percentage);
         while(current!=null){
             if(this.left!=null)
             {
-                traversal+=this.left.percentage
+                traversal.push(this.left.percentage)
                 previous = current;
                 current = this.left
             }else if(this.right!=null)
             {
-                traversal+=this.right.percentage
+                traversal.push(this.right.percentage)
                 previous = current;
                 current = this.right
             }else{
                 if(previous != null) current = previous;
+                else current = null //- exit
             }
         }
         console.log(JSON.stringify(traversal))
@@ -439,8 +446,10 @@ function executePiet()
 }
 function testTree(){
     let tree = new Tree();
-    //tree = tree.insert(new Node(8,64))
-    //tree.traverse()
+    tree.insert(new Node(8,64))
+    tree.insert(new Node(2,78))
+
+    tree.traverse()
 }
 function init()
 {
