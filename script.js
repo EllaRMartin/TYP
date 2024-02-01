@@ -51,68 +51,43 @@ class Tree{
         if(this.root==null){//first node in tree
             this.root = newNode;
             this.depth++;
-            console.log("Node successfully inserted ")
+            //console.log("Node successfully inserted ")
             //return this //tree
-        }else
-        {
+        }else{
             //if tree already has node(s)
             let current = this.root;
-            // pos = val%(this.numNodes+1);//num free spaces = num nodes +1
-            //depth first search
-            //currently puts furthest left or furthest right 
             if(this.depth>0)for(let d =0;d<this.depth;d++){
                 let left = current.left;
                 let right = current.right
-                // CHECK DEPTH - FILL DEPTH BEFORE MOVING ON?
-                // 1/99% - too small - stop
-                //check child nodes exist
-                if(right != null & left != null)//progress through tree
-                {
-                    //compare child nodes 
-                    if(left.percentage>right.percentage){
-                        current = current.left; 
-                    }else{current = current.right;}
-                }else if(right == null & current.percentage<50){
+
+                if(right==null & left != null){ //insert left
+                    current.left = newNode;break;
+                }
+                else if(left==null & right != null){ //insert right
+                    current.right = newNode;break;
+                }
+                else if(right == null && left == null){ //pick side to insert
                     current.right = newNode;
-                    this.depth++;
-                    console.log("Node inserted to right")
-                    return this
-                }else if(left == null){
-                    current.left = newNode;
-                    this.depth++;
-                    console.log("Node inserted to left")
-
-                    return this
-
+                    this.depth++;break;
+                }
+                else {//insert deeper in tree, pick direction
+                    if(left.percentage>right.percentage)current = current.left;
+                    else current = current.right;
                 }
             }
         }
     }
-    traverse()
+    
+    traverse(current,traversal) // https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
     {
-        let current = this.root;
-        let previous = null
-        let traversal = [];
-        traversal.push(current.percentage);
-        while(current!=null){
-            if(current.left!=null)
-            {
-                traversal.push(current.left.percentage)
-                previous = current;
-                current = current.left
-            }else if(current.right!=null)
-            {
-                traversal.push(current.right.percentage)
-                previous = current;
-                current = current.right
-            }
-            else current = null;
-            //else{
-            //     if(previous != null) current = previous;
-            //     else if(current === this.root) current = null //returned to beginning - exit
-            // }
-        }
-        console.log(JSON.stringify(traversal))
+        console.log("Curr: " + current.percentage)
+        if(current.left != null)console.log(" L: " + current.left.percentage)
+        if(current.right != null)console.log(" R: " + current.right.percentage)
+
+        if(current.left != null)traversal = this.traverse(current.left, traversal)
+        if(current.right != null)traversal = this.traverse(current.right,traversal)
+        traversal.push(current.percentage)
+        return traversal
     }
 }
 
@@ -451,10 +426,18 @@ function executePiet()
 }
 function testTree(){
     let tree = new Tree();
-    tree.insert(new Node(8,64))
-    tree.insert(new Node(2,78))
-
-    tree.traverse()
+    tree.insert(new Node(8,1))
+    tree.insert(new Node(2,2))
+    tree.insert(new Node(3,3))
+    tree.insert(new Node(8,4))
+    tree.insert(new Node(2,5))
+    tree.insert(new Node(3,6))
+    tree.insert(new Node(8,7))
+    tree.insert(new Node(2,8))
+    tree.insert(new Node(3,9))
+    
+    let traversal = tree.traverse(tree.root,[])
+    console.log(JSON.stringify(traversal))
 }
 function init()
 {
@@ -470,3 +453,5 @@ function init()
 }
 
 window.onload = init;
+
+
