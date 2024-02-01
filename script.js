@@ -95,20 +95,22 @@ class Tree{
         let traversal = [];
         traversal.push(current.percentage);
         while(current!=null){
-            if(this.left!=null)
+            if(current.left!=null)
             {
-                traversal.push(this.left.percentage)
+                traversal.push(current.left.percentage)
                 previous = current;
-                current = this.left
-            }else if(this.right!=null)
+                current = current.left
+            }else if(current.right!=null)
             {
-                traversal.push(this.right.percentage)
+                traversal.push(current.right.percentage)
                 previous = current;
-                current = this.right
-            }else{
-                if(previous != null) current = previous;
-                else current = null //- exit
+                current = current.right
             }
+            else current = null;
+            //else{
+            //     if(previous != null) current = previous;
+            //     else if(current === this.root) current = null //returned to beginning - exit
+            // }
         }
         console.log(JSON.stringify(traversal))
     }
