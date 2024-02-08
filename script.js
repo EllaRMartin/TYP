@@ -31,43 +31,84 @@ class Colours
     }
 }
 class Node{
-    constructor(val){
-        this.val = val;
+    constructor(colourcode,percentage){
+        this.colourcode = colourcode;
+        this.percentage = percentage;
         this.left = null;
         this.right = null;
+        this.parent = null;
+        //console.log("Node created: " + this.percentage)
     }
 }
 class Tree{
     constructor(){
         this.root = null
-        this.numNodes = 0;
+        this.depth = 0;
+        this.chooser = 0 //direction chooser
+        //console.log("Tree created")
     }
-    insert(val){
-        var newNode = new Node(val)
+    
+    insert(newNode){
+        //var newNode = new Node(colour,percentage)
         if(this.root==null){//first node in tree
             this.root = newNode;
-            this.numNodes++;
-            return this //tree
+            this.depth++;
+            //console.log("Node successfully inserted ")
+            //return this //tree
+        }else{
+            //if tree already has node(s)
+            let current = this.root;
+            if(this.depth>0)for(let d =0;d<this.depth;d++){
+                let left = current.left;
+                let right = current.right
+
+                if(right==null & left != null){ //insert right
+                    newNode.parent = current;
+                    current.right = newNode;break;
+                }
+                else if(left==null & right != null){ //insert left
+                    newNode.parent = current;
+                    current.left = newNode;break;
+                }
+                else if(right == null & left == null){ //pick side to insert
+                    newNode.parent = current;
+                    if(this.chooser ==0){
+                        current.right = newNode;
+                        this.chooser = 1;}
+                    else {current.left = newNode;
+                        this.chooser = 0}
+                    
+                    this.depth++;break;
+                }
+                else {//insert deeper in tree, pick direction
+                    // if(left.percentage>right.percentage)current = current.left;
+                    // else current = current.right;
+                    if(this.chooser = 1){
+                        current = current.right;
+                        this.chooser = 0;
+                    }else{ current = current.left;
+                        this.chooser = 1;
+                    }
+                }
+            }
         }
-        //if tree already has node(s)
-        current = this.root;
-        // pos = val%(this.numNodes+1);//num free spaces = num nodes +1
-        //depth first search
-        //currently puts furthest left or furthest right 
-        pos = val%2;
-        if(pos==1)
-        {
-            do{
-                current = current.left;
-            }while(current.left !== null)
-            current.left = newNode}
-        else if(pos==2)
-        {
-            do{
-                current = current.right;
-            }while(current.right !== null)
-            current.right = newNode
-        }
+    }
+    
+    traverse(current,traversal) // https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
+    {
+        // console.log("Curr: " + current.percentage)
+        // if(current.left != null)console.log(" L: " + current.left.percentage)
+        // if(current.right != null)console.log(" R: " + current.right.percentage)
+        let l = 0
+        let r = 0
+        if(current.left!= null) l = current.left.colourcode
+        if(current.right!=null) r = current.right.colourcode
+
+        console.log("Current: " + current.colourcode + " L: " + l  + " R: " + r)
+        if(current.left != null)traversal = this.traverse(current.left, traversal)
+        if(current.right != null)traversal = this.traverse(current.right,traversal)
+        traversal.push(current.percentage)
+        return traversal
     }
 }
 
@@ -85,7 +126,6 @@ function getScores()
 {
     let scores = [];
     let str = document.getElementById("beatnikInput").value; //get user input
-
     let words = str.split(" ");
     //document.getElementById("output").innerHTML = JSON.stringify(words);
     
@@ -93,52 +133,14 @@ function getScores()
         if(word != "") scores.push(word.toUpperCase().split("").reduce(getScrabbleScore,0));
         document.getElementById("output").innerHTML = JSON.stringify(scores);
     });
-    //repaint(scores) //to be replaced by paintPiet
     paintPiet(scores)
     return scores;
 }
-function paintRect(scores, x1,y1, x2, y2,val){
-    //console.log("painting rectangle ...")
-
-    //console.log(JSON.stringify(scores))
-    //test greater than
-
-    //UPDATE SCORES ARRAY - for execution
-    if(x1>x2){
-        temp = x1;
-        x1=x2;
-        x2=temp;
-    }
-    if(y1>y2){
-        temp = y1;
-        y1=y2;
-        y2=temp;
-    }
-    if(x1<0)x1=0
-    if(y1<0)y1=0
-    if(x2>99)x2=99
-    if(y2>99)y2=99
-    for(let x = x1;x<=x2;x++)
-    {
-        for(let y = y1;y<=y2;y++)
-        {
-            scores[x][y] = val;
-        }
-    }
-    //UPDATE CANVAS
+function paintPiet(scores){
+    //clear canvas
     let canvas = document.getElementById("pietCanvas")
     let ctx = canvas.getContext("2d")
-    let codelWidth = canvas.width/100;
-
-    if(val!=0&val!=null){
-        //paint a rectange
-        ctx.fillStyle = Colours.getColour(Colours.getLightness(val),Colours.getHue(val))
-    }else ctx.fillStyle = "white"
-    ctx.fillRect(x1*codelWidth,y1*codelWidth,(x2*codelWidth),(y2*codelWidth));
-
-    return scores;
-}
-function paintPiet(scores){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     //new empty codel array
     codels=[];
     for(let i = 0;i<100;i++){
@@ -147,43 +149,157 @@ function paintPiet(scores){
             codels[i][j]=0;
         }
     }
-    let vertical = 99;
-    let horizontal = 99;
-    for(let i = 0;i<scores.length;i++)
-    {
-        if(i%2==0)//even
-        {
-            if(i%4==0) //every other
-            {
-                horizontal = Math.floor(10*scores[i]/2) 
-            }
-            else vertical = Math.floor(10*scores[i]/2)
-            codels = paintRect(codels,vertical,0,100,horizontal,scores[i]);
-        }
-        else{
+    if(scores.length>0){
+        //PUT SCORES IN TREE
+        let tree = new Tree();
+        scores.forEach(score => tree.insert(new Node(score,getPercentage(score))))
+        let traversal = tree.traverse(tree.root,[])
+         console.log(JSON.stringify(traversal))
+
+        //PAINT TREE SCORES ON CANVAS
+        //console.log(tree.root.colourcode)
+        paintTree(tree);
+        // let current = tree.root
+        // if(current!=null){
+        //     codels = paintRect(codels,0,0,current.percentage,100,current.colourcode)
+        //     if(current.right!=null){
+        //         codels = paintRect(codels,current.percentage,current.right.percentage,100,100,current.right.colourcode)
+        //         current = current.right;
+        //     }
+        //     if(current.left!=null){
+        //         codels = paintRect(codels,0,0,current.percentage,current.left.percentage,current.left.colourcode)
+        //         current = current.left;
+        //     }
             
-            if(i%4==3)
-            {
-                horizontal = Math.floor(10*scores[i]/2) 
-            }else vertical = Math.floor(10*scores[i]/2)
-            codels = paintRect(codels,0,horizontal,vertical,100,scores[i]);
+        // }
+        //codels=paintRect(codels,0,0,tree.root.percentage,99,tree.root.score)
+    }
+}
+// function paintTree(current)
+// {
+//     if(current!=null){
+//         codels = paintRect(codels,0,0,current.percentage,100,current.colourcode)
+//         if(current.right!=null){
+//             codels = paintRect(codels,current.percentage,current.right.percentage,100,100,current.right.colourcode)
+//             paintTree(current.right);
+//         }
+//         if(current.left!=null){
+//             codels = paintRect(codels,0,0,current.percentage,current.left.percentage,current.left.colourcode)
+//             paintTree(current.left);
+//         }
+        
+//     }
+// }
+function paintTree(tree){ //pass in root node of tree 
+    current = tree.root;
+    if(current!=null){
+        //paint root as right node (current.percentage,0,100,100)
+        //or as left node
+        //paintRect(codels,0,0,current.percentage,100,current.colourcode)
+
+        //paint left child using (0,0,current.percentage,100)
+        //if(current.left!=null)paintNode(current.left,codels,0,0,current.percentage,current.left.percentage,0)
+
+        //paint left child using (current.percentage,0,100,100)
+        //if(current.right!=null)paintNode(current.right,codels,current.percentage,current.right.percentage,100,100,0)
+         
+        paintNode(current,codels,0,0,current.percentage,100,1,1)
+        paintNode(current,codels,current.percentage,0,100,100,1,0)
+
+
+    }
+    else console.log("Tree empty");
+}
+function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
+    if(paint==1)paintRect(codels,x1,y1,x2,y2,current.colourcode)
+    if(vertical == 1){
+        if(paint == 1 & current.left!=null){
+            paintNode(current.left,codels,x1,y1,x2,current.left.percentage,0,!paint)
+            paintNode(current.left,codels,x1,current.left.percentage,x2,y2,0,paint)
+        }
+        if(paint  == 0 & current.right!=null){
+            paintNode(current.right,codels,x1,y1,x2,current.right.percentage,0,!paint)
+            paintNode(current.right,codels,x1,current.right.percentage,x2,y2,0,paint)
+        }
+    }else{
+        if(paint == 1 & current.left!=null){
+            paintNode(current.left,codels,x1,y1,current.left.percentage,y2,1, !paint)
+            paintNode(current.left,codels,current.left.percentage,y1,x2,y2,1, paint)
+
+        }
+        if(paint == 0 & current.right!=null){
+            paintNode(current.right,codels,x1,y1,current.right.percentage,y2,1, !paint)
+            paintNode(current.right,codels,current.right.percentage,y1,x2,y2,1,paint)
+
         }
     }
     
-
+    
 }
+// function paintNodes(currentNode, depth){
+//     if(currentNode!= null){
+//         left = currentNode.left;
+//         right = currentNode.right;
+//         if(left != null){
+//             //paint left rect 
+//             if(depth%2 == 0){ //even depth - horizontal
+
+//             }else{//odd depth - vertical
+//                 //drawRect(prevx1,prevy1,cuurent.percentage,prev)
+//             }
+//         }
+//     }
+// }
+function paintTraversal(current,prev,codels) // https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
+    {
+        codels = paintRect(codels,0,0,current.percentage,100,current.colourcode)
+        if(current.left != null)paintTraversal(current.left, codels)
+        if(current.right != null)paintTraversal(current.right,codels)
+    }
+function paintRect(codels, x1,y1, x2, y2,score){
+    console.log(x1 + "," + y1 +"," + x2 +"," + y2 + "colour: " + score)
+    //UPDATE SCORES ARRAY - for execution
+    if(x1>x2){temp = x1;x1=x2;x2=temp;}
+    if(y1>y2){temp = y1;y1=y2;y2=temp;}
+    if(x1<0)x1=0
+    if(y1<0)y1=0
+    if(x2>99)x2=99
+    if(y2>99)y2=99
+    //update grid
+    for(let x = x1;x<=x2;x++)
+    {
+        for(let y = y1;y<=y2;y++)
+        {
+            codels[x][y] = score;
+        }
+    }
+    //UPDATE CANVAS
+    let canvas = document.getElementById("pietCanvas")
+    let ctx = canvas.getContext("2d")
+    let codelWidth = canvas.width/100;
+
+    if(score!=0&score!=null){
+        //paint a rectange
+        ctx.fillStyle = Colours.getColour(Colours.getLightness(score),Colours.getHue(score))
+    }else ctx.fillStyle = "white"
+    ctx.fillRect(x1*codelWidth,y1*codelWidth,(x2*codelWidth),(y2*codelWidth));
+
+    return codels;
+}
+function getPercentage(score){
+    let percentage = score * 4
+    if(percentage>99)percentage = 99;
+    else if(percentage<1) percentage = 1;
+    return percentage;
+}
+
+
 function repaint(codels)
 {
     let canvas = document.getElementById("pietCanvas")
     let ctx = canvas.getContext("2d")
-    // let codelWidth = canvas.width/scores.length;
-    // scores.forEach((score, i)=>{
-    //     document.getElementById("output").innerHTML
-    //     if(score!=0)  ctx.fillStyle = Colours.getColour(Colours.getLightness(score),Colours.getHue(score))
-    //     else ctx.fillstyle = "white"
-    //     ctx.fillRect(i*codelWidth,0,codelWidth,codelWidth);
-    // });
     let codelWidth = canvas.width/100;
+
     for(let x = 0;x<=100;x++){
         for(let y = 0;y<=100;y++){
             c = codels[x][y]
@@ -400,7 +516,21 @@ function executePiet()
 
     //console.log(changes)
 }
-
+function testTree(){
+    let tree = new Tree();
+    tree.insert(new Node(8,1))
+    tree.insert(new Node(2,2))
+    tree.insert(new Node(3,20))
+    tree.insert(new Node(8,4))
+    tree.insert(new Node(2,13))
+    tree.insert(new Node(3,6))
+    tree.insert(new Node(8,7))
+    tree.insert(new Node(2,8))
+    tree.insert(new Node(3,9))
+    
+    let traversal = tree.traverse(tree.root,[])
+    console.log(JSON.stringify(traversal))
+}
 function init()
 {
     // resize page elements
@@ -411,6 +541,9 @@ function init()
     // add event listeners to input elements
     document.getElementById("beatnikInput").addEventListener("input",getScores);
     document.getElementById("runButton").addEventListener("click",executePiet);
+    //testTree()
 }
 
 window.onload = init;
+
+
