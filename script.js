@@ -195,33 +195,42 @@ function paintTree(tree){ //pass in root node of tree
     if(current!=null){
         //paint root as right node (current.percentage,0,100,100)
         //or as left node
-        paintRect(codels,0,0,current.percentage,100,current.colourcode)
+        //paintRect(codels,0,0,current.percentage,100,current.colourcode)
 
         //paint left child using (0,0,current.percentage,100)
-        if(current.left!=null)paintNode(current.left,codels,0,0,current.percentage,current.left.percentage,0)
+        //if(current.left!=null)paintNode(current.left,codels,0,0,current.percentage,current.left.percentage,0)
 
         //paint left child using (current.percentage,0,100,100)
-        if(current.right!=null)paintNode(current.right,codels,current.percentage,current.right.percentage,100,100,0)
+        //if(current.right!=null)paintNode(current.right,codels,current.percentage,current.right.percentage,100,100,0)
+         
+        paintNode(current,codels,0,0,current.percentage,100,1,1)
+        paintNode(current,codels,current.percentage,0,100,100,1,0)
 
 
     }
     else console.log("Tree empty");
 }
-function paintNode(current,codels,x1,y1,x2,y2,vertical){
-    paintRect(codels,x1,y1,x2,y2,current.colourcode)
+function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
+    if(paint==1)paintRect(codels,x1,y1,x2,y2,current.colourcode)
     if(vertical == 1){
-        if(current.left!=null){
-            paintNode(current.left,codels,x1,y1,x2,current.left.percentage,0)
+        if(paint == 1 & current.left!=null){
+            paintNode(current.left,codels,x1,y1,x2,current.left.percentage,0,!paint)
+            paintNode(current.left,codels,x1,current.left.percentage,x2,y2,0,paint)
         }
-        if(current.right!=null){
-            paintNode(current.right,codels,x1,current.right.percentage,x2,y2,0)
+        if(paint  == 0 & current.right!=null){
+            paintNode(current.right,codels,x1,y1,x2,current.right.percentage,0,!paint)
+            paintNode(current.right,codels,x1,current.right.percentage,x2,y2,0,paint)
         }
     }else{
-        if(current.left!=null){
-            paintNode(current.left,codels,x1,y1,current.left.percentage,y2,1)
+        if(paint == 1 & current.left!=null){
+            paintNode(current.left,codels,x1,y1,current.left.percentage,y2,1, !paint)
+            paintNode(current.left,codels,current.left.percentage,y1,x2,y2,1, paint)
+
         }
-        if(current.right!=null){
-            paintNode(current.right,codels,current.right.percentage,y1,x2,y2,1)
+        if(paint == 0 & current.right!=null){
+            paintNode(current.right,codels,x1,y1,current.right.percentage,y2,1, !paint)
+            paintNode(current.right,codels,current.right.percentage,y1,x2,y2,1,paint)
+
         }
     }
     
@@ -278,7 +287,7 @@ function paintRect(codels, x1,y1, x2, y2,score){
     return codels;
 }
 function getPercentage(score){
-    let percentage = score*2;
+    let percentage = score * 4
     if(percentage>99)percentage = 99;
     else if(percentage<1) percentage = 1;
     return percentage;
