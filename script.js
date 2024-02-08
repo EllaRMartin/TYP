@@ -44,6 +44,7 @@ class Tree{
     constructor(){
         this.root = null
         this.depth = 0;
+        this.chooser = 0 //direction chooser
         //console.log("Tree created")
     }
     
@@ -61,22 +62,33 @@ class Tree{
                 let left = current.left;
                 let right = current.right
 
-                if(right==null & left != null){ //insert left
+                if(right==null & left != null){ //insert right
                     newNode.parent = current;
                     current.right = newNode;break;
                 }
-                else if(left==null & right != null){ //insert right
+                else if(left==null & right != null){ //insert left
                     newNode.parent = current;
                     current.left = newNode;break;
                 }
                 else if(right == null & left == null){ //pick side to insert
                     newNode.parent = current;
-                    current.right = newNode;
+                    if(this.chooser ==0){
+                        current.right = newNode;
+                        this.chooser = 1;}
+                    else {current.left = newNode;
+                        this.chooser = 0}
+                    
                     this.depth++;break;
                 }
                 else {//insert deeper in tree, pick direction
-                    if(left.percentage>right.percentage)current = current.left;
-                    else current = current.right;
+                    // if(left.percentage>right.percentage)current = current.left;
+                    // else current = current.right;
+                    if(this.chooser = 1){
+                        current = current.right;
+                        this.chooser = 0;
+                    }else{ current = current.left;
+                        this.chooser = 1;
+                    }
                 }
             }
         }
@@ -84,10 +96,15 @@ class Tree{
     
     traverse(current,traversal) // https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
     {
-        console.log("Curr: " + current.percentage)
-        if(current.left != null)console.log(" L: " + current.left.percentage)
-        if(current.right != null)console.log(" R: " + current.right.percentage)
+        // console.log("Curr: " + current.percentage)
+        // if(current.left != null)console.log(" L: " + current.left.percentage)
+        // if(current.right != null)console.log(" R: " + current.right.percentage)
+        let l = 0
+        let r = 0
+        if(current.left!= null) l = current.left.colourcode
+        if(current.right!=null) r = current.right.colourcode
 
+        console.log("Current: " + current.colourcode + " L: " + l  + " R: " + r)
         if(current.left != null)traversal = this.traverse(current.left, traversal)
         if(current.right != null)traversal = this.traverse(current.right,traversal)
         traversal.push(current.percentage)
@@ -137,41 +154,93 @@ function paintPiet(scores){
         let tree = new Tree();
         scores.forEach(score => tree.insert(new Node(score,getPercentage(score))))
         let traversal = tree.traverse(tree.root,[])
-        console.log(JSON.stringify(traversal))
+         console.log(JSON.stringify(traversal))
 
         //PAINT TREE SCORES ON CANVAS
         //console.log(tree.root.colourcode)
-        let current = tree.root
-        if(current!=null){
-            codels = paintRect(codels,0,0,current.percentage,100,current.colourcode)
-            if(current.right!=null){
-                codels = paintRect(codels,current.percentage,current.right.percentage,100,100,current.right.colourcode)
-                current = current.right;
-            }
-            if(current.left!=null){
-                codels = paintRect(codels,0,0,current.percentage,current.left.percentage,current.left.colourcode)
-                current = current.left;
-            }
+        paintTree(tree);
+        // let current = tree.root
+        // if(current!=null){
+        //     codels = paintRect(codels,0,0,current.percentage,100,current.colourcode)
+        //     if(current.right!=null){
+        //         codels = paintRect(codels,current.percentage,current.right.percentage,100,100,current.right.colourcode)
+        //         current = current.right;
+        //     }
+        //     if(current.left!=null){
+        //         codels = paintRect(codels,0,0,current.percentage,current.left.percentage,current.left.colourcode)
+        //         current = current.left;
+        //     }
             
-        }
+        // }
         //codels=paintRect(codels,0,0,tree.root.percentage,99,tree.root.score)
     }
 }
-function paintTree(current)
-{
-    if(current!=null){
-        codels = paintRect(codels,0,0,current.percentage,100,current.colourcode)
-        if(current.right!=null){
-            codels = paintRect(codels,current.percentage,current.right.percentage,100,100,current.right.colourcode)
-            paintTree(current.right);
-        }
-        if(current.left!=null){
-            codels = paintRect(codels,0,0,current.percentage,current.left.percentage,current.left.colourcode)
-            paintTree(current.left);
-        }
+// function paintTree(current)
+// {
+//     if(current!=null){
+//         codels = paintRect(codels,0,0,current.percentage,100,current.colourcode)
+//         if(current.right!=null){
+//             codels = paintRect(codels,current.percentage,current.right.percentage,100,100,current.right.colourcode)
+//             paintTree(current.right);
+//         }
+//         if(current.left!=null){
+//             codels = paintRect(codels,0,0,current.percentage,current.left.percentage,current.left.colourcode)
+//             paintTree(current.left);
+//         }
         
+//     }
+// }
+function paintTree(tree){ //pass in root node of tree 
+    current = tree.root;
+    if(current!=null){
+        //paint root as right node (current.percentage,0,100,100)
+        //or as left node
+        paintRect(codels,0,0,current.percentage,100,current.colourcode)
+
+        //paint left child using (0,0,current.percentage,100)
+        if(current.left!=null)paintNode(current.left,codels,0,0,current.percentage,current.left.percentage,0)
+
+        //paint left child using (current.percentage,0,100,100)
+        if(current.right!=null)paintNode(current.right,codels,current.percentage,current.right.percentage,100,100,0)
+
+
     }
+    else console.log("Tree empty");
 }
+function paintNode(current,codels,x1,y1,x2,y2,vertical){
+    paintRect(codels,x1,y1,x2,y2,current.colourcode)
+    if(vertical == 1){
+        if(current.left!=null){
+            paintNode(current.left,codels,x1,y1,x2,current.left.percentage,0)
+        }
+        if(current.right!=null){
+            paintNode(current.right,codels,x1,current.right.percentage,x2,y2,0)
+        }
+    }else{
+        if(current.left!=null){
+            paintNode(current.left,codels,x1,y1,current.left.percentage,y2,1)
+        }
+        if(current.right!=null){
+            paintNode(current.right,codels,current.right.percentage,y1,x2,y2,1)
+        }
+    }
+    
+    
+}
+// function paintNodes(currentNode, depth){
+//     if(currentNode!= null){
+//         left = currentNode.left;
+//         right = currentNode.right;
+//         if(left != null){
+//             //paint left rect 
+//             if(depth%2 == 0){ //even depth - horizontal
+
+//             }else{//odd depth - vertical
+//                 //drawRect(prevx1,prevy1,cuurent.percentage,prev)
+//             }
+//         }
+//     }
+// }
 function paintTraversal(current,prev,codels) // https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
     {
         codels = paintRect(codels,0,0,current.percentage,100,current.colourcode)
@@ -179,6 +248,7 @@ function paintTraversal(current,prev,codels) // https://www.geeksforgeeks.org/tr
         if(current.right != null)paintTraversal(current.right,codels)
     }
 function paintRect(codels, x1,y1, x2, y2,score){
+    console.log(x1 + "," + y1 +"," + x2 +"," + y2 + "colour: " + score)
     //UPDATE SCORES ARRAY - for execution
     if(x1>x2){temp = x1;x1=x2;x2=temp;}
     if(y1>y2){temp = y1;y1=y2;y2=temp;}
@@ -208,7 +278,7 @@ function paintRect(codels, x1,y1, x2, y2,score){
     return codels;
 }
 function getPercentage(score){
-    let percentage = score*4;
+    let percentage = score*2;
     if(percentage>99)percentage = 99;
     else if(percentage<1) percentage = 1;
     return percentage;
