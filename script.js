@@ -36,6 +36,7 @@ class Node{
         this.percentage = percentage;
         this.left = null;
         this.right = null;
+        this.chooser = 0; //direction chooser
         //this.parent = null;
         //console.log("Node created: " + this.percentage)
     }
@@ -44,7 +45,7 @@ class Tree{
     constructor(){
         this.root = null
         this.depth = 0;
-        this.chooser = 0 //direction chooser
+        
         //console.log("Tree created")
     }
     
@@ -53,46 +54,55 @@ class Tree{
         if(this.root==null){//first node in tree
             this.root = newNode;
             this.depth++;
+            return this;
             //console.log("Node successfully inserted ")
             //return this //tree
-        }else{
+        }else if(this.depth>0){ // at least one node exists
             //if tree already has node(s)
             let current = this.root;
-            if(this.depth>0){
-                for(let d =0;d<this.depth;d++){
-                    let left = current.left;
-                    let right = current.right
-
-                    if(right==null & left != null){ //insert right
-                        newNode.parent = current;
-                        current.right = newNode;break;
-                    }
-                    else if(left==null & right != null){ //insert left
-                        newNode.parent = current;
-                        current.left = newNode;break;
-                    }
-                    else if(right == null & left == null){ //pick side to insert
-                        newNode.parent = current;
-                        if(this.chooser ==0){
-                            current.right = newNode;
-                            this.chooser = 1;}
-                        else {current.left = newNode;
-                            this.chooser = 0}
-                        
-                        this.depth++;break;
-                    }
-                    else {//insert deeper in tree, pick direction
-                        // if(left.percentage>right.percentage)current = current.left;
-                        // else current = current.right;
-                        if(this.chooser = 1){
-                            current = current.right;
-                            this.chooser = 0;
-                        }else{ current = current.left;
-                            this.chooser = 1;
-                        }
+            for(let d =0;d<this.depth;d++){
+                //newNode.parent = current;
+                //if(right==null & left != null){ //insert right
+                if(current.right == null && current.left == null ) {
+                    this.depth++;
+                    console.log("DEPTH: " + this.depth)
+                }
+                
+                if(current.left==null){ //insert left
+                    console.log("left")
+                    current.left = newNode;
+                    return this;
+                }else if(current.right==null){ //insert right
+                    console.log("right")
+                    current.right = newNode;
+                    return this;
+                }
+                // else if(right == null & left == null){ //pick side to insert
+                //     if(this.chooser ==0){
+                //         current.right = newNode;
+                //         this.chooser = 1;
+                //     }
+                //     else{
+                //         current.left = newNode;
+                //         this.chooser = 0
+                //     }
+                //     this.depth++;
+                //     break;
+                // }
+                else {//insert deeper in tree, pick direction
+                    // if(left.percentage>right.percentage)current = current.left;
+                    // else current = current.right;
+                    
+                    if(current.chooser == 1){
+                        current = current.right; 
+                        current.chooser = 0; //flip chooser
+                    }else{ 
+                        current = current.left;
+                        current.chooser = 1;
                     }
                 }
             }
+            
         }
     }
     
@@ -109,6 +119,7 @@ class Tree{
         console.log("Current: " + current.colourcode + " L: " + l  + " R: " + r)
         if(current.left != null)traversal = this.traverse(current.left, traversal)
         if(current.right != null)traversal = this.traverse(current.right,traversal)
+                        
         traversal.push(current.percentage)
         return traversal
     }
@@ -116,7 +127,7 @@ class Tree{
 
 
 function getScrabbleScore(total, current)
-{ 
+{ 2
     let i = current.charCodeAt(0) - 65;
     const scrabble = [1,3,3,2,1,4,2,4,1,8,5,1,3,1,1,3,10,1,1,1,1,4,4,8,4,10];
     
@@ -153,7 +164,7 @@ function paintPiet(scores){
     }
     if(scores.length>0){
         //PUT SCORES IN TREE
-        // let tree = new Tree();
+        let tree = new Tree();
         // tree.insert(new Node(5,50))
         // tree.insert(new Node(7,50))
         // tree.insert(new Node(8,50))
@@ -173,8 +184,8 @@ function paintPiet(scores){
     }
 }
 function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
-    if(paint != 1) console.log("NOT");
-    console.log("painting node: " + x1 + ","+ y1 + ","+ x2 + ","+ y2);
+    //if(paint != 1) console.log("NOT");
+    //console.log("painting node: " + x1 + ","+ y1 + ","+ x2 + ","+ y2);
     if(paint==1)codels = paintRect(codels,x1,y1,x2,y2,current.colourcode);
     if(vertical == 1){
         if(paint == 1 & current.left!=null){
