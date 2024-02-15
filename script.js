@@ -167,7 +167,7 @@ function paintPiet(scores){
     }
 }
 function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
-    if(paint==1)paintRect(codels,x1,y1,x2,y2,current.colourcode)
+    if(paint==1)codels = paintRect(codels,x1,y1,x2,y2,current.colourcode)
     if(vertical == 1){
         if(paint == 1 & current.left!=null){
             paintNode(current.left,codels,x1,y1,x2,current.left.percentage,0,!paint)
@@ -190,17 +190,17 @@ function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
         }
     }
 }
-function paintTraversal(current,prev,codels) // https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
-    {
-        codels = paintRect(codels,0,0,current.percentage,100,current.colourcode)
-        if(current.left != null)paintTraversal(current.left, codels)
-        if(current.right != null)paintTraversal(current.right,codels)
-    }
+// function paintTraversal(current,prev,codels) // https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
+//     {
+//         codels = paintRect(codels,0,0,current.percentage,100,current.colourcode)
+//         if(current.left != null)paintTraversal(current.left, codels)
+//         if(current.right != null)paintTraversal(current.right,codels)
+//     }
 function paintRect(codels, x1,y1, x2, y2,score){
     console.log(x1 + "," + y1 +"," + x2 +"," + y2 + " colour: " + score)
     //UPDATE SCORES ARRAY - for execution
-    if(x1>x2){temp = x1;x1=x2;x2=temp;}
-    if(y1>y2){temp = y1;y1=y2;y2=temp;}
+    // if(x1>x2){temp = x1;x1=x2;x2=temp;}
+    // if(y1>y2){temp = y1;y1=y2;y2=temp;}
     if(x1<0){x1=0;}
     if(y1<0){y1=0;}
     if(x2>99){x2=99;}
@@ -214,20 +214,20 @@ function paintRect(codels, x1,y1, x2, y2,score){
         }
     }
     //UPDATE CANVAS
-    let canvas = document.getElementById("pietCanvas")
-    let ctx = canvas.getContext("2d")
+    let canvas = document.getElementById("pietCanvas");
+    let ctx = canvas.getContext("2d");
     let codelWidth = canvas.width/100;
 
     if(score!=0&score!=null){
         //paint a rectange
-        ctx.fillStyle = Colours.getColour(Colours.getLightness(score),Colours.getHue(score))
-    }else ctx.fillStyle = "white"
+        ctx.fillStyle = Colours.getColour(Colours.getLightness(score),Colours.getHue(score));
+    }else ctx.fillStyle = "white";
     ctx.fillRect(x1*codelWidth,y1*codelWidth,(x2*codelWidth),(y2*codelWidth));
 
     return codels;
 }
 function getPercentage(score){
-    let percentage = score * 4
+    let percentage = score * 4;
     if(percentage>99)percentage = 99;
     else if(percentage<1) percentage = 1;
     return percentage;
@@ -236,19 +236,19 @@ function getPercentage(score){
 
 function repaint(codels)
 {
-    let canvas = document.getElementById("pietCanvas")
-    let ctx = canvas.getContext("2d")
+    let canvas = document.getElementById("pietCanvas");
+    let ctx = canvas.getContext("2d");
     let codelWidth = canvas.width/100;
 
     for(let x = 0;x<=100;x++){
         for(let y = 0;y<=100;y++){
-            c = codels[x][y]
+            c = codels[x][y];
             if(c!=0 & c!= null){
-                ctx.fillStyle = Colours.getColour(Colours.getLightness(c),Colours.getHue(c))
+                ctx.fillStyle = Colours.getColour(Colours.getLightness(c),Colours.getHue(c));
             //     console.log(c)
             // console.log(Colours.getHue(c))
             }
-            else ctx.fillStyle = "white"
+            else ctx.fillStyle = "white";
             ctx.fillRect(x*codelWidth,y*codelWidth,(x*codelWidth)+codelWidth,(y*codelWidth)+codelWidth);
         }
 
