@@ -157,7 +157,7 @@ function paintPiet(scores){
         scores.forEach(score => tree.insert(new Node(score,getPercentage(score))))
         let traversal = tree.traverse(tree.root,[])
         console.log(JSON.stringify(traversal))
-
+        // paint codels to canvas
         current = tree.root;
         if(current!=null){
             paintNode(current,codels,0,0,current.percentage,100,1,1)
