@@ -153,20 +153,15 @@ function paintPiet(scores){
     }
     if(scores.length>0){
         //PUT SCORES IN TREE
-        let tree = new Tree();
-        tree.insert(new Node(5,50))
-        tree.insert(new Node(7,50))
-        tree.insert(new Node(8,50))
-        tree.insert(new Node(9,50))
-        tree.insert(new Node(10,50))
-
-
-
-
-
-        // scores.forEach(score => tree.insert(new Node(score,getPercentage(score))))
-        // let traversal = tree.traverse(tree.root,[])
-        // console.log(JSON.stringify(traversal))
+        // let tree = new Tree();
+        // tree.insert(new Node(5,50))
+        // tree.insert(new Node(7,50))
+        // tree.insert(new Node(8,50))
+        // tree.insert(new Node(9,50))
+        // tree.insert(new Node(10,50))
+        scores.forEach(score => tree.insert(new Node(score,getPercentage(score))))
+        let traversal = tree.traverse(tree.root,[])
+        console.log(JSON.stringify(traversal))
 
         // paint codels to canvas
         current = tree.root;
