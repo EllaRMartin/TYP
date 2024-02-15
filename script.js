@@ -36,7 +36,7 @@ class Node{
         this.percentage = percentage;
         this.left = null;
         this.right = null;
-        this.parent = null;
+        //this.parent = null;
         //console.log("Node created: " + this.percentage)
     }
 }
@@ -58,36 +58,38 @@ class Tree{
         }else{
             //if tree already has node(s)
             let current = this.root;
-            if(this.depth>0)for(let d =0;d<this.depth;d++){
-                let left = current.left;
-                let right = current.right
+            if(this.depth>0){
+                for(let d =0;d<this.depth;d++){
+                    let left = current.left;
+                    let right = current.right
 
-                if(right==null & left != null){ //insert right
-                    newNode.parent = current;
-                    current.right = newNode;break;
-                }
-                else if(left==null & right != null){ //insert left
-                    newNode.parent = current;
-                    current.left = newNode;break;
-                }
-                else if(right == null & left == null){ //pick side to insert
-                    newNode.parent = current;
-                    if(this.chooser ==0){
-                        current.right = newNode;
-                        this.chooser = 1;}
-                    else {current.left = newNode;
-                        this.chooser = 0}
-                    
-                    this.depth++;break;
-                }
-                else {//insert deeper in tree, pick direction
-                    // if(left.percentage>right.percentage)current = current.left;
-                    // else current = current.right;
-                    if(this.chooser = 1){
-                        current = current.right;
-                        this.chooser = 0;
-                    }else{ current = current.left;
-                        this.chooser = 1;
+                    if(right==null & left != null){ //insert right
+                        newNode.parent = current;
+                        current.right = newNode;break;
+                    }
+                    else if(left==null & right != null){ //insert left
+                        newNode.parent = current;
+                        current.left = newNode;break;
+                    }
+                    else if(right == null & left == null){ //pick side to insert
+                        newNode.parent = current;
+                        if(this.chooser ==0){
+                            current.right = newNode;
+                            this.chooser = 1;}
+                        else {current.left = newNode;
+                            this.chooser = 0}
+                        
+                        this.depth++;break;
+                    }
+                    else {//insert deeper in tree, pick direction
+                        // if(left.percentage>right.percentage)current = current.left;
+                        // else current = current.right;
+                        if(this.chooser = 1){
+                            current = current.right;
+                            this.chooser = 0;
+                        }else{ current = current.left;
+                            this.chooser = 1;
+                        }
                     }
                 }
             }
@@ -154,7 +156,7 @@ function paintPiet(scores){
         let tree = new Tree();
         scores.forEach(score => tree.insert(new Node(score,getPercentage(score))))
         let traversal = tree.traverse(tree.root,[])
-         console.log(JSON.stringify(traversal))
+        console.log(JSON.stringify(traversal))
 
         //PAINT TREE SCORES ON CANVAS
         //console.log(tree.root.colourcode)
@@ -257,7 +259,7 @@ function paintTraversal(current,prev,codels) // https://www.geeksforgeeks.org/tr
         if(current.right != null)paintTraversal(current.right,codels)
     }
 function paintRect(codels, x1,y1, x2, y2,score){
-    console.log(x1 + "," + y1 +"," + x2 +"," + y2 + "colour: " + score)
+    console.log(x1 + "," + y1 +"," + x2 +"," + y2 + " colour: " + score)
     //UPDATE SCORES ARRAY - for execution
     if(x1>x2){temp = x1;x1=x2;x2=temp;}
     if(y1>y2){temp = y1;y1=y2;y2=temp;}
