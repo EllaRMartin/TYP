@@ -154,9 +154,20 @@ function paintPiet(scores){
     if(scores.length>0){
         //PUT SCORES IN TREE
         let tree = new Tree();
-        scores.forEach(score => tree.insert(new Node(score,getPercentage(score))))
-        let traversal = tree.traverse(tree.root,[])
-        console.log(JSON.stringify(traversal))
+        tree.insert(new Node(5,50))
+        tree.insert(new Node(7,50))
+        tree.insert(new Node(8,50))
+        tree.insert(new Node(9,50))
+        tree.insert(new Node(10,50))
+
+
+
+
+
+        // scores.forEach(score => tree.insert(new Node(score,getPercentage(score))))
+        // let traversal = tree.traverse(tree.root,[])
+        // console.log(JSON.stringify(traversal))
+
         // paint codels to canvas
         current = tree.root;
         if(current!=null){
@@ -167,25 +178,27 @@ function paintPiet(scores){
     }
 }
 function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
-    if(paint==1)codels = paintRect(codels,x1,y1,x2,y2,current.colourcode)
+    if(paint != 1) console.log("NOT");
+    console.log("painting node: " + x1 + ","+ y1 + ","+ x2 + ","+ y2);
+    if(paint==1)codels = paintRect(codels,x1,y1,x2,y2,current.colourcode);
     if(vertical == 1){
         if(paint == 1 & current.left!=null){
-            paintNode(current.left,codels,x1,y1,x2,current.left.percentage,0,!paint)
-            paintNode(current.left,codels,x1,current.left.percentage,x2,y2,0,paint)
+            paintNode(current.left,codels,x1,y1,x2,current.left.percentage,0,!paint);
+            paintNode(current.left,codels,x1,current.left.percentage,x2,y2,0,paint);
         }
         if(paint  == 0 & current.right!=null){
-            paintNode(current.right,codels,x1,y1,x2,current.right.percentage,0,!paint)
-            paintNode(current.right,codels,x1,current.right.percentage,x2,y2,0,paint)
+            paintNode(current.right,codels,x1,y1,x2,current.right.percentage,0,!paint);
+            paintNode(current.right,codels,x1,current.right.percentage,x2,y2,0,paint);
         }
     }else{
         if(paint == 1 & current.left!=null){
-            paintNode(current.left,codels,x1,y1,current.left.percentage,y2,1, !paint)
-            paintNode(current.left,codels,current.left.percentage,y1,x2,y2,1, paint)
+            paintNode(current.left,codels,x1,y1,current.left.percentage,y2,1, !paint);
+            paintNode(current.left,codels,current.left.percentage,y1,x2,y2,1, paint);
 
         }
         if(paint == 0 & current.right!=null){
-            paintNode(current.right,codels,x1,y1,current.right.percentage,y2,1, !paint)
-            paintNode(current.right,codels,current.right.percentage,y1,x2,y2,1,paint)
+            paintNode(current.right,codels,x1,y1,current.right.percentage,y2,1, !paint);
+            paintNode(current.right,codels,current.right.percentage,y1,x2,y2,1,paint);
 
         }
     }
