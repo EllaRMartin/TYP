@@ -189,22 +189,22 @@ function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
     if(paint==1)codels = paintRect(codels,x1,y1,x2,y2,current.colourcode);
     if(vertical == 1){
         if(paint == 1 & current.left!=null){
-            paintNode(current.left,codels,x1,y1,x2,current.left.percentage,0,!paint);
-            paintNode(current.left,codels,x1,current.left.percentage,x2,y2,0,paint);
+            paintNode(current.left,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100+y1),0,!paint);
+            paintNode(current.left,codels,x1,Math.floor(y2-(y2-y1)*current.left.percentage/100),x2,y2,0,paint);
         }
         if(paint  == 0 & current.right!=null){
-            paintNode(current.right,codels,x1,y1,x2,current.right.percentage,0,!paint);
-            paintNode(current.right,codels,x1,current.right.percentage,x2,y2,0,paint);
+            paintNode(current.right,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100+y1),0,!paint);
+            paintNode(current.right,codels,x1,Math.floor(y2-(y2-y1)*current.left.percentage/100),x2,y2,0,paint);
         }
     }else{
         if(paint == 1 & current.left!=null){
-            paintNode(current.left,codels,x1,y1,current.left.percentage,y2,1, !paint);
-            paintNode(current.left,codels,current.left.percentage,y1,x2,y2,1, paint);
+            paintNode(current.left,codels,x1,y1,Math.floor((x2-x1)*current.left.percentage/100+x1),y2,1, !paint);
+            paintNode(current.left,codels,Math.floor((x2-x1)*current.left.percentage/100+x1),y1,x2,y2,1, paint);
 
         }
         if(paint == 0 & current.right!=null){
-            paintNode(current.right,codels,x1,y1,current.right.percentage,y2,1, !paint);
-            paintNode(current.right,codels,current.right.percentage,y1,x2,y2,1,paint);
+            paintNode(current.right,codels,x1,y1,Math.floor((x2-x1)*current.left.percentage/100+x1),y2,1, !paint);
+            paintNode(current.right,codels,Math.floor((x2-x1)*current.left.percentage/100+x1),y1,x2,y2,1,paint);
 
         }
     }
@@ -236,12 +236,14 @@ function paintRect(codels, x1,y1, x2, y2,score){
     let canvas = document.getElementById("pietCanvas");
     let ctx = canvas.getContext("2d");
     let codelWidth = canvas.width/100;
+    let codelHeight = canvas.height/100;
+
 
     if(score!=0&score!=null){
         //paint a rectange
         ctx.fillStyle = Colours.getColour(Colours.getLightness(score),Colours.getHue(score));
     }else ctx.fillStyle = "white";
-    ctx.fillRect(x1*codelWidth,y1*codelWidth,(x2*codelWidth),(y2*codelWidth));
+    ctx.fillRect(x1*codelWidth,y1*codelHeight,(x2*codelWidth),(y2*codelHeight));
 
     return codels;
 }
