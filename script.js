@@ -60,12 +60,12 @@ class Tree{
         }else if(this.depth>0){ // at least one node exists
             //if tree already has node(s)
             let current = this.root;
-            for(let d =0;d<this.depth;d++){
+            for(let d =0;d<=this.depth;d++){
                 //newNode.parent = current;
                 //if(right==null & left != null){ //insert right
                 if(current.right == null && current.left == null ) {
                     this.depth++;
-                    console.log("DEPTH: " + this.depth)
+                    //console.log("DEPTH: " + this.depth)
                 }
                 
                 if(current.left==null){ //insert left
@@ -177,8 +177,8 @@ function paintPiet(scores){
         // paint codels to canvas
         current = tree.root;
         if(current!=null){
-            paintNode(current,codels,0,0,current.percentage,100,1,true)
-            paintNode(current,codels,current.percentage,0,100,100,1,false)
+            paintNode(current,codels,0,0,current.percentage,100,true,true)
+            paintNode(current,codels,current.percentage,0,100,100,true,false)
         }
         else console.log("Tree empty");
     }
@@ -188,24 +188,24 @@ function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
     //console.log("painting node: " + x1 + ","+ y1 + ","+ x2 + ","+ y2);
     //console.log(paint)
     if(paint)codels = paintRect(codels,x1,y1,x2,y2,current.colourcode);
-    if(vertical == 1){
-        if(paint == 1 & current.left!=null){ 
-            paintNode(current.left,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100+y1),0,paint);
-            paintNode(current.left,codels,x1,Math.floor((y2-y1)*current.left.percentage/100+y1),x2,y2,0,!paint);
+    if(vertical){
+        if(paint && current.left!=null){ 
+            paintNode(current.left,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100+y1),false,true);
+            paintNode(current.left,codels,x1,Math.floor((y2-y1)*current.left.percentage/100+y1),x2,y2,false,false);
         }
-        if(paint  == 0 & current.right!=null){
-            paintNode(current.right,codels,x1,y1,x2,Math.floor((y2-y1)*current.right.percentage/100+y1),0,paint);
-            paintNode(current.right,codels,x1,Math.floor((y2-y1)*current.right.percentage/100+y1),x2,y2,0,!paint);
+        if(!paint && current.right!=null){
+            paintNode(current.right,codels,x1,y1,x2,Math.floor((y2-y1)*current.right.percentage/100+y1),false,true);
+            paintNode(current.right,codels,x1,Math.floor((y2-y1)*current.right.percentage/100+y1),x2,y2,false,false);
         }
     }else{
-        if(paint == 1 & current.left!=null){
-            paintNode(current.left,codels,x1,y1,Math.floor((x2-x1)*current.left.percentage/100+x1),y2,1, paint);
-            paintNode(current.left,codels,Math.floor((x2-x1)*current.left.percentage/100+x1),y1,x2,y2,1, !paint);
+        if(paint && current.left!=null){
+            paintNode(current.left,codels,x1,y1,Math.floor((x2-x1)*current.left.percentage/100+x1),y2,true, true);
+            paintNode(current.left,codels,Math.floor((x2-x1)*current.left.percentage/100+x1),y1,x2,y2,true, false);
 
         }
-        if(paint == 0 & current.right!=null){
-            paintNode(current.right,codels,x1,y1,Math.floor((x2-x1)*current.right.percentage/100+x1),y2,1, paint);
-            paintNode(current.right,codels,Math.floor((x2-x1)*current.right.percentage/100+x1),y1,x2,y2,1,!paint);
+        if(!paint && current.right!=null){
+            paintNode(current.right,codels,x1,y1,Math.floor((x2-x1)*current.right.percentage/100+x1),y2,true, true);
+            paintNode(current.right,codels,Math.floor((x2-x1)*current.right.percentage/100+x1),y1,x2,y2,true,false);
 
         }
     }
@@ -244,6 +244,8 @@ function paintRect(codels, x1,y1, x2, y2,score){
         //paint a rectange
         ctx.fillStyle = Colours.getColour(Colours.getLightness(score),Colours.getHue(score));
     }else ctx.fillStyle = "white";
+    //console.log(x1 + "," + y1 +"," + x2 +"," + y2 + " colour: " + score)
+
     ctx.fillRect(x1*codelWidth,y1*codelHeight,(x2*codelWidth),(y2*codelHeight));
 
     return codels;
@@ -256,43 +258,26 @@ function getPercentage(score){
 }
 
 
-function repaint(codels)
-{
-    let canvas = document.getElementById("pietCanvas");
-    let ctx = canvas.getContext("2d");
-    let codelWidth = canvas.width/100;
+// function repaint(codels)
+// {
+//     let canvas = document.getElementById("pietCanvas");
+//     let ctx = canvas.getContext("2d");
+//     let codelWidth = canvas.width/100;
 
-    for(let x = 0;x<=100;x++){
-        for(let y = 0;y<=100;y++){
-            c = codels[x][y];
-            if(c!=0 & c!= null){
-                ctx.fillStyle = Colours.getColour(Colours.getLightness(c),Colours.getHue(c));
-            //     console.log(c)
-            // console.log(Colours.getHue(c))
-            }
-            else ctx.fillStyle = "white";
-            ctx.fillRect(x*codelWidth,y*codelWidth,(x*codelWidth)+codelWidth,(y*codelWidth)+codelWidth);
-        }
+//     for(let x = 0;x<=100;x++){
+//         for(let y = 0;y<=100;y++){
+//             c = codels[x][y];
+//             if(c!=null && c!=0 ){
+//                 ctx.fillStyle = Colours.getColour(Colours.getLightness(c),Colours.getHue(c));
+//             //     console.log(c)
+//             // console.log(Colours.getHue(c))
+//             }
+//             else ctx.fillStyle = "white";
+//             ctx.fillRect(x*codelWidth,y*codelWidth,(x*codelWidth)+codelWidth,(y*codelWidth)+codelWidth);
+//         }
 
-    }
-}
-function setCanvasSize(){
-    var canvas = document.getElementById("pietCanvas");
-    canvas.width = window.innerWidth/2;
-    canvas.height = window.innerHeight/2;
-
-}
-function setBeatnikInputBoxSize(){
-    var beatBox = document.getElementById("beatnikInput");
-    let compStyle = window.getComputedStyle(beatBox);
-    let sz = compStyle.getPropertyValue("font-size");
-    // beatBox.cols = window.innerWidth/(2*sz);
-    // beatBox.rows = window.innerHeight/sz;
-    beatBox.cols = "50%";
-    beatBox.rows = "50%";
-
-    //beatBox.value = window.innerWidth
-}
+//     }
+// }
 
 function executePiet()
 {
@@ -478,21 +463,38 @@ function executePiet()
 
     //console.log(changes)
 }
-function testTree(){
-    let tree = new Tree();
-    tree.insert(new Node(8,1))
-    tree.insert(new Node(2,2))
-    tree.insert(new Node(3,20))
-    tree.insert(new Node(8,4))
-    tree.insert(new Node(2,13))
-    tree.insert(new Node(3,6))
-    tree.insert(new Node(8,7))
-    tree.insert(new Node(2,8))
-    tree.insert(new Node(3,9))
-    
-    let traversal = tree.traverse(tree.root,[])
-    console.log(JSON.stringify(traversal))
+function setCanvasSize(){
+    var canvas = document.getElementById("pietCanvas");
+    canvas.width = window.innerWidth/2;
+    canvas.height = window.innerHeight/2;
+
 }
+function setBeatnikInputBoxSize(){
+    var beatBox = document.getElementById("beatnikInput");
+    let compStyle = window.getComputedStyle(beatBox);
+    let sz = compStyle.getPropertyValue("font-size");
+    // beatBox.cols = window.innerWidth/(2*sz);
+    // beatBox.rows = window.innerHeight/sz;
+    beatBox.cols = "50%";
+    beatBox.rows = "50%";
+
+    //beatBox.value = window.innerWidth
+}
+// function testTree(){
+//     let tree = new Tree();
+//     tree.insert(new Node(8,1))
+//     tree.insert(new Node(2,2))
+//     tree.insert(new Node(3,20))
+//     tree.insert(new Node(8,4))
+//     tree.insert(new Node(2,13))
+//     tree.insert(new Node(3,6))
+//     tree.insert(new Node(8,7))
+//     tree.insert(new Node(2,8))
+//     tree.insert(new Node(3,9))
+    
+//     let traversal = tree.traverse(tree.root,[])
+//     console.log(JSON.stringify(traversal))
+// }
 function init()
 {
     // resize page elements
