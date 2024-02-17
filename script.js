@@ -177,8 +177,8 @@ function paintPiet(scores){
         // paint codels to canvas
         current = tree.root;
         if(current!=null){
-            paintNode(current,codels,0,0,current.percentage,100,1,1)
-            paintNode(current,codels,current.percentage,0,100,100,1,0)
+            paintNode(current,codels,0,0,current.percentage,100,1,true)
+            paintNode(current,codels,current.percentage,0,100,100,1,false)
         }
         else console.log("Tree empty");
     }
@@ -186,25 +186,26 @@ function paintPiet(scores){
 function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
     //if(paint != 1) console.log("NOT");
     //console.log("painting node: " + x1 + ","+ y1 + ","+ x2 + ","+ y2);
-    if(paint==1)codels = paintRect(codels,x1,y1,x2,y2,current.colourcode);
+    //console.log(paint)
+    if(paint)codels = paintRect(codels,x1,y1,x2,y2,current.colourcode);
     if(vertical == 1){
-        if(paint == 1 & current.left!=null){
-            paintNode(current.left,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100+y1),0,!paint);
-            paintNode(current.left,codels,x1,Math.floor(y2-(y2-y1)*current.left.percentage/100),x2,y2,0,paint);
+        if(paint == 1 & current.left!=null){ 
+            paintNode(current.left,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100+y1),0,paint);
+            paintNode(current.left,codels,x1,Math.floor((y2-y1)*current.left.percentage/100+y1),x2,y2,0,!paint);
         }
         if(paint  == 0 & current.right!=null){
-            paintNode(current.right,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100+y1),0,!paint);
-            paintNode(current.right,codels,x1,Math.floor(y2-(y2-y1)*current.left.percentage/100),x2,y2,0,paint);
+            paintNode(current.right,codels,x1,y1,x2,Math.floor((y2-y1)*current.right.percentage/100+y1),0,paint);
+            paintNode(current.right,codels,x1,Math.floor((y2-y1)*current.right.percentage/100+y1),x2,y2,0,!paint);
         }
     }else{
         if(paint == 1 & current.left!=null){
-            paintNode(current.left,codels,x1,y1,Math.floor((x2-x1)*current.left.percentage/100+x1),y2,1, !paint);
-            paintNode(current.left,codels,Math.floor((x2-x1)*current.left.percentage/100+x1),y1,x2,y2,1, paint);
+            paintNode(current.left,codels,x1,y1,Math.floor((x2-x1)*current.left.percentage/100+x1),y2,1, paint);
+            paintNode(current.left,codels,Math.floor((x2-x1)*current.left.percentage/100+x1),y1,x2,y2,1, !paint);
 
         }
         if(paint == 0 & current.right!=null){
-            paintNode(current.right,codels,x1,y1,Math.floor((x2-x1)*current.left.percentage/100+x1),y2,1, !paint);
-            paintNode(current.right,codels,Math.floor((x2-x1)*current.left.percentage/100+x1),y1,x2,y2,1,paint);
+            paintNode(current.right,codels,x1,y1,Math.floor((x2-x1)*current.right.percentage/100+x1),y2,1, paint);
+            paintNode(current.right,codels,Math.floor((x2-x1)*current.right.percentage/100+x1),y1,x2,y2,1,!paint);
 
         }
     }
@@ -239,7 +240,7 @@ function paintRect(codels, x1,y1, x2, y2,score){
     let codelHeight = canvas.height/100;
 
 
-    if(score!=0&score!=null){
+    if(score!=null && score!=0){
         //paint a rectange
         ctx.fillStyle = Colours.getColour(Colours.getLightness(score),Colours.getHue(score));
     }else ctx.fillStyle = "white";
