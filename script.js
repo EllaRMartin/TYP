@@ -173,7 +173,7 @@ function paintPiet(scores){
         scores.forEach(score => tree.insert(new Node(score,getPercentage(score))))
         let traversal = tree.traverse(tree.root,[])
         console.log(JSON.stringify(traversal))
-
+        //paintRect(codels,16,24,52,36,4)
         // paint codels to canvas
         current = tree.root;
         if(current!=null){
@@ -190,22 +190,22 @@ function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
     if(paint)codels = paintRect(codels,x1,y1,x2,y2,current.colourcode);
     if(vertical){
         if(paint && current.left!=null){ 
-            paintNode(current.left,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100+y1),false,true);
+            paintNode(current.left,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100),false,true);
             paintNode(current.left,codels,x1,Math.floor((y2-y1)*current.left.percentage/100+y1),x2,y2,false,false);
         }
         if(!paint && current.right!=null){
-            paintNode(current.right,codels,x1,y1,x2,Math.floor((y2-y1)*current.right.percentage/100+y1),false,true);
-            paintNode(current.right,codels,x1,Math.floor((y2-y1)*current.right.percentage/100+y1),x2,y2,false,false);
+            paintNode(current.right,codels,x1,y1,x2,Math.floor((y2-y1)*current.right.percentage/100),false,false);
+            paintNode(current.right,codels,x1,Math.floor((y2-y1)*current.right.percentage/100+y1),x2,y2,false,true);
         }
     }else{
         if(paint && current.left!=null){
-            paintNode(current.left,codels,x1,y1,Math.floor((x2-x1)*current.left.percentage/100+x1),y2,true, true);
+            paintNode(current.left,codels,x1,y1,Math.floor((x2-x1)*current.left.percentage/100),y2,true, true);
             paintNode(current.left,codels,Math.floor((x2-x1)*current.left.percentage/100+x1),y1,x2,y2,true, false);
 
         }
         if(!paint && current.right!=null){
-            paintNode(current.right,codels,x1,y1,Math.floor((x2-x1)*current.right.percentage/100+x1),y2,true, true);
-            paintNode(current.right,codels,Math.floor((x2-x1)*current.right.percentage/100+x1),y1,x2,y2,true,false);
+            paintNode(current.right,codels,x1,y1,Math.floor((x2-x1)*current.right.percentage/100),y2,true, false);
+            paintNode(current.right,codels,Math.floor((x2-x1)*current.right.percentage/100+x1),y1,x2,y2,true,true);
 
         }
     }
@@ -476,7 +476,7 @@ function setBeatnikInputBoxSize(){
     // beatBox.cols = window.innerWidth/(2*sz);
     // beatBox.rows = window.innerHeight/sz;
     beatBox.cols = "50%";
-    beatBox.rows = "50%";
+    beatBox.rows = "100%";
 
     //beatBox.value = window.innerWidth
 }
