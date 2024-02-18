@@ -45,10 +45,8 @@ class Tree{
     constructor(){
         this.root = null
         this.depth = 0;
-        
         //console.log("Tree created")
     }
-    
     insert(newNode){
         //var newNode = new Node(colour,percentage)
         if(this.root==null){//first node in tree
@@ -67,42 +65,25 @@ class Tree{
                     this.depth++;
                     //console.log("DEPTH: " + this.depth)
                 }
-                
                 if(current.left==null){ //insert left
-                    console.log("left")
+                    //console.log("left")
                     current.left = newNode;
                     return this;
                 }else if(current.right==null){ //insert right
-                    console.log("right")
+                    //console.log("right")
                     current.right = newNode;
                     return this;
                 }
-                // else if(right == null & left == null){ //pick side to insert
-                //     if(this.chooser ==0){
-                //         current.right = newNode;
-                //         this.chooser = 1;
-                //     }
-                //     else{
-                //         current.left = newNode;
-                //         this.chooser = 0
-                //     }
-                //     this.depth++;
-                //     break;
-                // }
                 else {//insert deeper in tree, pick direction
-                    // if(left.percentage>right.percentage)current = current.left;
-                    // else current = current.right;
-                    
                     if(current.chooser == 1){
-                        current = current.right; 
                         current.chooser = 0; //flip chooser
+                        current = current.right; 
                     }else{ 
-                        current = current.left;
                         current.chooser = 1;
+                        current = current.left;
                     }
                 }
             }
-            
         }
     }
     
