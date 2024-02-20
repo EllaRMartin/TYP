@@ -159,7 +159,7 @@ function paintPiet(scores){
         current = tree.root;
         if(current!=null){
             paintNode(current,codels,0,0,current.percentage,100,true,true)
-            paintNode(current,codels,current.percentage,0,100,100,true,false)
+            paintNode(current,codels,current.percentage,0,100-current.percentage,100,true,false)
         }
         else console.log("Tree empty");
     }
@@ -169,24 +169,43 @@ function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
     //console.log("painting node: " + x1 + ","+ y1 + ","+ x2 + ","+ y2);
     //console.log(paint)
     if(paint)codels = paintRect(codels,x1,y1,x2,y2,current.colourcode);
+    // if(vertical){
+    //     if(paint && current.left!=null){ 
+    //         paintNode(current.left,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100),false,true);
+    //         paintNode(current.left,codels,x1,Math.floor((y2-y1)*current.left.percentage/100+y1),x2,y2-((y2-y1)*current.percentage/100),false,false);
+    //     }
+    //     if(!paint && current.right!=null){
+    //         paintNode(current.right,codels,x1,y1,x2,Math.floor((y2-y1)*current.right.percentage/100),false,false);
+    //         paintNode(current.right,codels,x1,Math.floor((y2-y1)*current.right.percentage/100+y1),x2,y2-((y2-y1)*current.percentage/100),false,true);
+    //     }
+    // }else{
+    //     if(paint && current.left!=null){
+    //         paintNode(current.left,codels,x1,y1,Math.floor((x2-x1)*current.left.percentage/100),y2,true, true);
+    //         paintNode(current.left,codels,Math.floor((x2-x1)*current.left.percentage/100+x1),y1,x2-((x2-x1)*current.percentage/100),y2,true, false);
+    //     }
+    //     if(!paint && current.right!=null){
+    //         paintNode(current.right,codels,x1,y1,Math.floor((x2-x1)*current.right.percentage/100),y2,true, false);
+    //         paintNode(current.right,codels,Math.floor((x2-x1)*current.right.percentage/100+x1),y1,x2-((x2-x1)*current.percentage/100),y2,true,true);
+    //     }
+    // }
     if(vertical){
         if(paint && current.left!=null){ 
-            paintNode(current.left,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100),false,true);
-            paintNode(current.left,codels,x1,Math.floor((y2-y1)*current.left.percentage/100+y1),x2,y2,false,false);
+            paintNode(current.left,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100+y1),false,true);
+            paintNode(current.left,codels,x1,Math.round((y2-y1)*current.left.percentage/100+y1),x2,y2,false,false);
         }
         if(!paint && current.right!=null){
-            paintNode(current.right,codels,x1,y1,x2,Math.floor((y2-y1)*current.right.percentage/100),false,false);
-            paintNode(current.right,codels,x1,Math.floor((y2-y1)*current.right.percentage/100+y1),x2,y2,false,true);
+            paintNode(current.right,codels,x1,y1,x2,Math.floor((y2-y1)*current.right.percentage/100+y1),false,false);
+            paintNode(current.right,codels,x1,Math.round((y2-y1)*current.right.percentage/100+y1),x2,y2,false,true);
         }
     }else{
         if(paint && current.left!=null){
-            paintNode(current.left,codels,x1,y1,Math.floor((x2-x1)*current.left.percentage/100),y2,true, true);
-            paintNode(current.left,codels,Math.floor((x2-x1)*current.left.percentage/100+x1),y1,x2,y2,true, false);
+            paintNode(current.left,codels,x1,y1,Math.floor((x2-x1)*(current.left.percentage)/100+x1),y2,true, true);
+            paintNode(current.left,codels,Math.round((x2-x1)*(current.left.percentage)/100+x1),y1,x2,y2,true, false);
 
         }
         if(!paint && current.right!=null){
-            paintNode(current.right,codels,x1,y1,Math.floor((x2-x1)*current.right.percentage/100),y2,true, false);
-            paintNode(current.right,codels,Math.floor((x2-x1)*current.right.percentage/100+x1),y1,x2,y2,true,true);
+            paintNode(current.right,codels,x1,y1,Math.floor((x2-x1)*(current.right.percentage)/100+x1),y2,true, false);
+            paintNode(current.right,codels,Math.round((x2-x1)*(current.right.percentage)/100+x1),y1,x2,y2,true,true);
 
         }
     }
@@ -227,7 +246,7 @@ function paintRect(codels, x1,y1, x2, y2,score){
     }else ctx.fillStyle = "white";
     //console.log(x1 + "," + y1 +"," + x2 +"," + y2 + " colour: " + score)
 
-    ctx.fillRect(x1*codelWidth,y1*codelHeight,(x2*codelWidth),(y2*codelHeight));
+    ctx.fillRect(x1*codelWidth,y1*codelHeight,((x2-1)*codelWidth),((y2-y1)*codelHeight));
 
     return codels;
 }
