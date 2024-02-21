@@ -253,12 +253,13 @@ function executePiet()
     document.getElementById("output").innerHTML = "";
     document.getElementById("pietOutput").innerHTML = "";
     codels = paintPiet(getScores())
-    console.log(codels[101][101]==undefined)
+    //pad array? -1
     for(let i = 0;i<codels.length-1;i++)//lefthand corner to right 
     {
         let change = Colours.getColourChange(codels[i][0],codels[i+1][0]);
         if(change[0]==0 && change[1]==0){
             // no change
+            //swap x an y? - travel vertical> horizontal
         }else console.log(change);
         //console.log(codels[i][0])
     }
