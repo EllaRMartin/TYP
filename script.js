@@ -146,16 +146,17 @@ function paintPiet(scores){
     if(scores.length>0){
         //PUT SCORES IN TREE
         let tree = new Tree();
-        scores.forEach(score => tree.insert(new Node(score,getPercentage(score))))
-        let traversal = tree.traverse(tree.root,[])
-        console.log(JSON.stringify(traversal))
+        scores.forEach(score => tree.insert(new Node(score,getPercentage(score))));
+        //let traversal = tree.traverse(tree.root,[]);
+        //console.log(JSON.stringify(traversal));
         current = tree.root;
         if(current!=null){
-            paintNode(current,codels,0,0,current.percentage,100,true,true)
-            paintNode(current,codels,current.percentage,0,100,100,true,false)
+            codels = paintNode(current,codels,0,0,current.percentage,100,true,true);
+            codels = paintNode(current,codels,current.percentage,0,100,100,true,false);
         }
         else console.log("Tree empty");
     }
+    return codels;
 }
 function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
     
@@ -184,7 +185,7 @@ function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
     return codels;
 }
 function paintRect(codels, x1,y1, x2, y2,score){
-    console.log(x1 + "," + y1 +"," + x2 +"," + y2 + " colour: " + score)
+    //console.log(x1 + "," + y1 +"," + x2 +"," + y2 + " colour: " + score)
     //UPDATE SCORES ARRAY - for execution
     // if(x1>x2){temp = x1;x1=x2;x2=temp;}
     // if(y1>y2){temp = y1;y1=y2;y2=temp;}
@@ -245,14 +246,24 @@ function getPercentage(score){
 
 //     }
 // }
-// function ececutePiet()
-// {
-//     //clear previous outputs
-//     document.getElementById("stack").innerHTML = "";
-//     document.getElementById("output").innerHTML = "";
-//     document.getElementById("pietOutput").innerHTML = "";
-// }
 function executePiet()
+{
+    //clear previous outputs
+    document.getElementById("stack").innerHTML = "";
+    document.getElementById("output").innerHTML = "";
+    document.getElementById("pietOutput").innerHTML = "";
+    codels = paintPiet(getScores())
+    console.log(codels[101][101]==undefined)
+    for(let i = 0;i<codels.length-1;i++)//lefthand corner to right 
+    {
+        let change = Colours.getColourChange(codels[i][0],codels[i+1][0]);
+        if(change[0]==0 && change[1]==0){
+            // no change
+        }else console.log(change);
+        //console.log(codels[i][0])
+    }
+}
+function executePietOperation()
 {
     //clear previous outputs
     document.getElementById("stack").innerHTML = "";
