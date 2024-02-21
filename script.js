@@ -159,7 +159,7 @@ function paintPiet(scores){
         current = tree.root;
         if(current!=null){
             paintNode(current,codels,0,0,current.percentage,100,true,true)
-            paintNode(current,codels,current.percentage,0,100-current.percentage,100,true,false)
+            paintNode(current,codels,current.percentage,0,100,100,true,false)
         }
         else console.log("Tree empty");
     }
@@ -246,7 +246,7 @@ function paintRect(codels, x1,y1, x2, y2,score){
     }else ctx.fillStyle = "white";
     //console.log(x1 + "," + y1 +"," + x2 +"," + y2 + " colour: " + score)
 
-    ctx.fillRect(x1*codelWidth,y1*codelHeight,((x2-1)*codelWidth),((y2-y1)*codelHeight));
+    ctx.fillRect(x1*codelWidth,y1*codelHeight,((x2-x1)*codelWidth),((y2-y1)*codelHeight));
 
     return codels;
 }
