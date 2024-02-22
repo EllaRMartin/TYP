@@ -246,6 +246,22 @@ function getPercentage(score){
 
 //     }
 // }
+function switchDirection(xin,yin){
+    if(xin == 1){ //moving right, move down
+        xin = 0;
+        yin = 1;
+    }else if(yin == 1){ //moving down , move left
+        xin = -1;
+        yin = 0;
+    }else if(xin == -1){//moving left,move up
+        xin = 0;
+        yin = -1;
+    }else if(yin == -1){//moving up, move right
+        xin = 1;
+        yin = 0;
+    }
+    return [xin,yin];
+}
 function executePiet()
 {
     //clear previous outputs
@@ -257,20 +273,37 @@ function executePiet()
     let changes = [];
     let stack = [];
     let colourBlockCount = 0;
+    let xin = 1;//initially moves right from top left corner
+    let yin = 0;
+    let numRounds = 0; lim = 4; //limit number of loops - avoid infinite loop crash
     //pad array? -1
-    for(let i = 0;i<codels.length-1;i++)//lefthand corner to right 
+    let x,y;
+    for(x = 0,y = 0;x>=0 && x<codels.length && y>=0 && y<codels.length;x+=xin,y+=yin)//lefthand corner to right 
     {
-        let change = Colours.getColourChange(codels[i][0],codels[i+1][0]);
-        if(change[0]==0 && change[1]==0){// no change
-            
-            //swap x an y? - travel vertical> horizontal
-            colourBlockCount++;
-        }else{ //new colourblock entered
-            changes.push(change);
-            colourBlockCount= 0;//reset block count - new colour
-            executePietOperation(change,stack,colourBlockCount)
+        
+        if(x<codels.length-1 && y<codels.length-1){ //if not on border, calculate change in hue/lightness
+            let change = [0,0]
+            try{
+                change = Colours.getColourChange(codels[x][y],codels[x+xin][y+yin]);
+            }catch(err){
+                console.log("ERROR: " + x + ", " + y)
+            }
+            if(change[0]==0 && change[1]==0){// no change
+                
+                //swap x an y? - travel vertical> horizontal
+                colourBlockCount++;
+            }else{ //new colourblock entered
+                changes.push(change);
+                colourBlockCount= 0;//reset block count - new colour
+                executePietOperation(change,stack,colourBlockCount)
+            }
+        }else{ //if on border, change direction
+            [xin,yin] = switchDirection(xin,yin);
+            numRounds++;
+            if(numRounds==lim){
+                break;
+            }
         }
-
         //console.log(codels[i][0])
     }
     document.getElementById("stack").innerHTML = JSON.stringify(stack);
