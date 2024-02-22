@@ -249,41 +249,53 @@ function getPercentage(score){
 function executePiet()
 {
     //clear previous outputs
-    document.getElementById("stack").innerHTML = "";
-    document.getElementById("output").innerHTML = "";
+    document.getElementById("stack").innerHTML = ""; //print intermediate phases?
+    document.getElementById("output").innerHTML = ""; //debugging output 
     document.getElementById("pietOutput").innerHTML = "";
     codels = paintPiet(getScores())
+
+    let changes = [];
+    let stack = [];
+    let colourBlockCount = 0;
     //pad array? -1
     for(let i = 0;i<codels.length-1;i++)//lefthand corner to right 
     {
         let change = Colours.getColourChange(codels[i][0],codels[i+1][0]);
-        if(change[0]==0 && change[1]==0){
-            // no change
+        if(change[0]==0 && change[1]==0){// no change
+            
             //swap x an y? - travel vertical> horizontal
-        }else console.log(change);
+            colourBlockCount++;
+        }else{ //new colourblock entered
+            changes.push(change);
+            colourBlockCount= 0;//reset block count - new colour
+            executePietOperation(change,stack,colourBlockCount)
+        }
+
         //console.log(codels[i][0])
     }
+    document.getElementById("stack").innerHTML = JSON.stringify(stack);
+    document.getElementById("output").innerHTML = JSON.stringify(changes);
 }
-function executePietOperation()
+function executePietOperation(change,stack,colourBlockCount)
 {
     //clear previous outputs
-    document.getElementById("stack").innerHTML = "";
-    document.getElementById("output").innerHTML = "";
-    document.getElementById("pietOutput").innerHTML = "";
+    // document.getElementById("stack").innerHTML = "";
+    // document.getElementById("output").innerHTML = "";
+    // document.getElementById("pietOutput").innerHTML = "";
 
 
-    //document.getElementById("output").innerHTML = "running"
-    let scores = getScores(); //may be redundant - could pass to func instead
-    let stack = []; let changes = [];
-    //let registers = [];
-    let colourBlockCount = 1;
-    for(let i = 0;i < scores.length-1;i++)
-    {
-        let change = Colours.getColourChange(scores[i], scores[i+1]);
-        changes.push(change);
-        if(change[0] == 0 && change[1] == 0) colourBlockCount++; //if no change in hue or lightness, increment block size counter
-        else  //if new colour block
-        {
+    // //document.getElementById("output").innerHTML = "running"
+    // let scores = getScores(); //may be redundant - could pass to func instead
+    // let stack = []; let changes = []; //store changes for debugging
+    // //let registers = [];
+    // let colourBlockCount = 1;
+    // for(let i = 0;i < scores.length-1;i++)
+    // {
+    //     let change = Colours.getColourChange(scores[i], scores[i+1]);
+    //     changes.push(change);
+    //     if(change[0] == 0 && change[1] == 0) colourBlockCount++; //if no change in hue or lightness, increment block size counter
+    //     else  //if new colour block
+    //     {
             let num2 = null;
             let num1 = null;
             switch(change[0]) //chose operation by change in lightness
@@ -440,11 +452,11 @@ function executePietOperation()
                     break;
                     
             }
-            colourBlockCount = 1; //reset counter
-        }
-    }
-    document.getElementById("stack").innerHTML = JSON.stringify(stack);
-    document.getElementById("output").innerHTML = JSON.stringify(changes);
+    //         colourBlockCount = 1; //reset counter
+    //     }
+    // }
+    // document.getElementById("stack").innerHTML = JSON.stringify(stack);
+    // document.getElementById("output").innerHTML = JSON.stringify(changes);
 
     //console.log(changes)
 }
