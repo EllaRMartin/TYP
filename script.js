@@ -277,35 +277,47 @@ function executePiet()
     let yin = 0;
     let numRounds = 0; lim = 4; //limit number of loops - avoid infinite loop crash
     //pad array? -1
-    let x,y;
-    for(x = 0,y = 0;x>=0 && x<codels.length && y>=0 && y<codels.length;x+=xin,y+=yin)//lefthand corner to right 
+    let x = 0,y = 0;
+    let canvas = document.getElementById("pietCanvas");
+    let ctx = canvas.getContext("2d");
+    while(x>=0 && x<codels.length && y>=0 && y<codels.length)//lefthand corner to right 
     {
-        
-        if(x<codels.length-1 && y<codels.length-1){ //if not on border, calculate change in hue/lightness
-            let change = [0,0]
+        x+=xin; //increment x value
+        y+=yin; //increment y value
+        if(x+xin>= codels.length || y+yin>=codels.length || x+xin<0 || y+yin<0){ //if on border, change direction
+            [xin,yin] = switchDirection(xin,yin);
+            console.log("SWITCH: " + x + ", " + y + " in: " + xin + ", " + yin);
+
+            numRounds++;
+            if(numRounds==lim){
+                break;
+            }
+        }else{ //if not on border, calculate change in hue/lightness
+            let change = [-1,-1]
             try{
                 change = Colours.getColourChange(codels[x][y],codels[x+xin][y+yin]);
+                //draw execution path
+                ctx.beginPath();
+                ctx.moveTo(x*canvas.width/100,y*canvas.height/100);
+                ctx.lineTo((x+xin)*canvas.width/100,(y+yin)*canvas.height/100);
+                ctx.closePath();
+                ctx.stroke();
             }catch(err){
-                console.log("ERROR: " + x + ", " + y)
+                console.log("ERROR: " + x + ", " + y);
             }
-            if(change[0]==0 && change[1]==0){// no change
-                
-                //swap x an y? - travel vertical> horizontal
+            if(change[0]==0 && change[1]==0){// no change - same colour
                 colourBlockCount++;
+            //}else if (change[0] ==-1 && change[1] == -1){//no change - error
             }else{ //new colourblock entered
                 changes.push(change);
                 colourBlockCount= 0;//reset block count - new colour
                 executePietOperation(change,stack,colourBlockCount)
             }
-        }else{ //if on border, change direction
-            [xin,yin] = switchDirection(xin,yin);
-            numRounds++;
-            if(numRounds==lim){
-                break;
-            }
-        }
+        } 
         //console.log(codels[i][0])
     }
+    console.log("END: " + x + ", " + y + " in: " + xin + ", " + yin);
+
     document.getElementById("stack").innerHTML = JSON.stringify(stack);
     document.getElementById("output").innerHTML = JSON.stringify(changes);
 }
@@ -494,7 +506,7 @@ function executePietOperation(change,stack,colourBlockCount)
     //console.log(changes)
 }
 function setCanvasSize(){
-    var canvas = document.getElementById("pietCanvas");
+    let canvas = document.getElementById("pietCanvas");
     canvas.width = window.innerWidth/2;
     canvas.height = window.innerHeight/2;
 
