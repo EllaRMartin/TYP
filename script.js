@@ -321,7 +321,7 @@ function executePiet()
     document.getElementById("stack").innerHTML = JSON.stringify(stack);
     document.getElementById("output").innerHTML = JSON.stringify(changes);
 }
-function executePietOperation(change,stack,colourBlockCount)
+function executePietOperation(change,stack,colourBlockCount,xin,yin)
 {
     //clear previous outputs
     // document.getElementById("stack").innerHTML = "";
@@ -408,7 +408,7 @@ function executePietOperation(change,stack,colourBlockCount)
                             else stack.push(num2 - num1);
                             break;
                         case 2: //MOD Pop top two numbers, push remainder to stack (bottom/top)
-                            console.log("MOD")
+                            console.log("MOD");
                             num1 = stack.pop();
                             num2 = stack.pop();
                             if(num1 == null && num2 == null) console.log("Modulo failed: Tried to pop from empty stack");
@@ -417,6 +417,14 @@ function executePietOperation(change,stack,colourBlockCount)
                             else stack.push(num2 % num1);
                             break;
                         case 3://POINTER increment dp
+                            console.log("INCREMENT DP");
+                            num1 = stack.pop();
+                            if(num1 == null) console.log("POINTER Failed: Empty stack");
+                            else{
+                                for(let i = 0;i<num1;i++){
+                                    switchDirection(xin,yin);
+                                }
+                            }
                             break;
                         case 4: //aq aqpp aqpp aqpppp aqpppp aqpppp aq aq aq aqpp aqpppp ppp
                             console.log("ROLL")
