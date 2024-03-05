@@ -275,7 +275,7 @@ function executePiet()
     let colourBlockCount = 0;
     let xin = 1;//initially moves right from top left corner
     let yin = 0;
-    let numRounds = 0; lim = 4; //limit number of loops - avoid infinite loop crash
+    let numRounds = 0; lim = 5; //limit number of loops - avoid infinite loop crash
     //pad array? -1
     let x = 0,y = 0;
     let canvas = document.getElementById("pietCanvas");
@@ -286,7 +286,7 @@ function executePiet()
         y+=yin; //increment y value
         if(x+xin>= codels.length || y+yin>=codels.length || x+xin<0 || y+yin<0){ //if on border, change direction
             [xin,yin] = switchDirection(xin,yin);
-            console.log("SWITCH: " + x + ", " + y + " in: " + xin + ", " + yin);
+            //console.log("SWITCH: " + x + ", " + y + " in: " + xin + ", " + yin);
 
             numRounds++;
             if(numRounds==lim){
@@ -306,12 +306,13 @@ function executePiet()
                 console.log("ERROR: " + x + ", " + y);
             }
             if(change[0]==0 && change[1]==0){// no change - same colour
+                //console.log("+");
                 colourBlockCount++;
             //}else if (change[0] ==-1 && change[1] == -1){//no change - error
             }else{ //new colourblock entered
                 changes.push(change);
+                executePietOperation(change,stack,colourBlockCount,xin,yin)
                 colourBlockCount= 0;//reset block count - new colour
-                executePietOperation(change,stack,colourBlockCount)
             }
         } 
         //console.log(codels[i][0])
@@ -349,6 +350,7 @@ function executePietOperation(change,stack,colourBlockCount,xin,yin)
                     switch(change[1]) // choose operation by change in hue
                     {
                         case 1: //ADD Pop top two numbers, push sum to stack 
+                            console.log("ADD");
                             num1 = stack.pop();
                             num2 = stack.pop();
                             if(num1 == null && num2 == null) console.log("Addition failed: Tried to pop from empty stack");
@@ -389,6 +391,7 @@ function executePietOperation(change,stack,colourBlockCount,xin,yin)
                             char = prompt("Enter a character");
                             char = char.charCodeAt(0);
                             if(char!= null) stack.push(char);
+                            else console.log("INPUT CHAR failed: null input");
                             break;
                     }
                     break;
@@ -396,10 +399,11 @@ function executePietOperation(change,stack,colourBlockCount,xin,yin)
                     switch(change[1]) //choose operation by change in hue
                     {
                         case 0: //Push size of current block to stack
-                            console.log("PUSH");
+                            console.log("PUSH " + colourBlockCount);
                             stack.push(colourBlockCount);
                             break;
                         case 1: //SUB Pop top two numbers, push difference to stack (bottom-top)
+                            console.log("SUB");
                             num1 = stack.pop();
                             num2 = stack.pop();
                             if(num1 == null && num2 == null) console.log("Subtraction failed: Tried to pop from empty stack");
@@ -462,7 +466,8 @@ function executePietOperation(change,stack,colourBlockCount,xin,yin)
                         case 5://output num
                             console.log("OUTPUT NUM");
                             let num = stack.pop()
-                            if(num != null) document.getElementById("pietOutput").innerHTML = document.getElementById("pietOutput").innerHTML + num;
+                            if(char == null)console.log("OUTPUT failed: Empty stack");
+                            else document.getElementById("pietOutput").innerHTML = document.getElementById("pietOutput").innerHTML + num;
                             break;
                     }
                     break;
@@ -470,6 +475,7 @@ function executePietOperation(change,stack,colourBlockCount,xin,yin)
                     switch(change[1])
                     {
                         case 0: //Pop top value from stack
+                            console.log("POP");
                             stack.pop();
                         break;
                         case 1: //MULT Pop top two numbers, push product to stack 
@@ -484,7 +490,8 @@ function executePietOperation(change,stack,colourBlockCount,xin,yin)
                         case 2: //NOT Pop top value from stack, if 0 push 1, else push 0
                             console.log("NOT")
                             num1 = stack.pop();
-                            if(num1 == 0) stack.push(1);
+                            if(num1 == null)console.log("NOT failed: empty stack")
+                            else if(num1 == 0) stack.push(1);
                             else stack.push(0);
                             break;
                         case 3: //increment cc
@@ -492,14 +499,16 @@ function executePietOperation(change,stack,colourBlockCount,xin,yin)
                         case 4://user input num
                             console.log("INPUT NUM");
                             num = parseInt(prompt("Enter a number"));
-                            if(num!= NaN) stack.push(num);
+                            if(num == NaN) console.log("INPUT failed: not a number");
+                            else stack.push(num);
                             //parse float?
                             break;
                         case 5://output char
                             console.log("OUTPUT CHAR");
                             num = stack.pop()
                             char = String.fromCharCode(num);
-                            if(char != null) document.getElementById("pietOutput").innerHTML = document.getElementById("pietOutput").innerHTML + char;
+                            if(char == null)console.log("OUTPUT failed: Empty stack");
+                            else document.getElementById("pietOutput").innerHTML = document.getElementById("pietOutput").innerHTML + char;
                             break;
                     }
                     break;
