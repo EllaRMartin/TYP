@@ -540,26 +540,17 @@ function setBeatnikInputBoxSize(){
 
     //beatBox.value = window.innerWidth
 }
-// function testTree(){
-//     let tree = new Tree();
-//     tree.insert(new Node(8,1))
-//     tree.insert(new Node(2,2))
-//     tree.insert(new Node(3,20))
-//     tree.insert(new Node(8,4))
-//     tree.insert(new Node(2,13))
-//     tree.insert(new Node(3,6))
-//     tree.insert(new Node(8,7))
-//     tree.insert(new Node(2,8))
-//     tree.insert(new Node(3,9))
-    
-//     let traversal = tree.traverse(tree.root,[])
-//     console.log(JSON.stringify(traversal))
-// }
 function displayHint1(){
     document.getElementById("hint1Text").style.display="block";
 }
 function hideHint1(){
     document.getElementById("hint1Text").style.display="none";
+}
+function displayHint2(){
+    document.getElementById("hint2Text").style.display="block";
+}
+function hideHint2(){
+    document.getElementById("hint2Text").style.display="none";
 }
 function init()
 {
@@ -571,16 +562,15 @@ function init()
     setCanvasSize();
     //Hide hint panels
     document.getElementById("hint1Text").style.display="none";
-
+    document.getElementById("hint2Text").style.display="none";
     // add event listeners to input elements
     document.getElementById("beatnikInput").addEventListener("input",getScores);
     document.getElementById("runButton").addEventListener("click",executePiet);
     // add event listeners to hint buttons
     document.getElementById("hint1").addEventListener("mouseover",displayHint1);
     document.getElementById("hint1").addEventListener("mouseout",hideHint1);
-
-
-    //testTree()
+    document.getElementById("hint2").addEventListener("mouseover",displayHint2);
+    document.getElementById("hint2").addEventListener("mouseout",hideHint2);
 }
 
 window.onload = init;
