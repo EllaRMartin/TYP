@@ -467,7 +467,7 @@ function executePietOperation(change,stack,colourBlockCount,xin,yin)
                         case 5://output num
                             console.log("OUTPUT NUM");
                             let num = stack.pop()
-                            if(char == null)console.log("OUTPUT failed: Empty stack");
+                            if(num == null)console.log("OUTPUT failed: Empty stack");
                             else document.getElementById("pietOutput").innerHTML = document.getElementById("pietOutput").innerHTML + num;
                             break;
                     }
@@ -578,7 +578,7 @@ function init()
     // add event listeners to hint buttons
     document.getElementById("hint1").addEventListener("mouseover",displayHint1);
     document.getElementById("hint1").addEventListener("mouseout",hideHint1);
-    
+
 
     //testTree()
 }
