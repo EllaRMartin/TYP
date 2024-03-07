@@ -146,48 +146,21 @@ function paintPiet(scores){
     if(scores.length>0){
         //PUT SCORES IN TREE
         let tree = new Tree();
-        // tree.insert(new Node(5,50))
-        // tree.insert(new Node(7,50))
-        // tree.insert(new Node(8,50))
-        // tree.insert(new Node(9,50))
-        // tree.insert(new Node(10,50))
-        scores.forEach(score => tree.insert(new Node(score,getPercentage(score))))
-        let traversal = tree.traverse(tree.root,[])
-        console.log(JSON.stringify(traversal))
-        //paintRect(codels,16,24,52,36,4)
-        // paint codels to canvas
+        scores.forEach(score => tree.insert(new Node(score,getPercentage(score))));
+        //let traversal = tree.traverse(tree.root,[]);
+        //console.log(JSON.stringify(traversal));
         current = tree.root;
         if(current!=null){
-            paintNode(current,codels,0,0,current.percentage,100,true,true)
-            paintNode(current,codels,current.percentage,0,100-current.percentage,100,true,false)
+            codels = paintNode(current,codels,0,0,current.percentage,100,true,true);
+            codels = paintNode(current,codels,current.percentage,0,100,100,true,false);
         }
         else console.log("Tree empty");
     }
+    return codels;
 }
 function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
-    //if(paint != 1) console.log("NOT");
-    //console.log("painting node: " + x1 + ","+ y1 + ","+ x2 + ","+ y2);
-    //console.log(paint)
+    
     if(paint)codels = paintRect(codels,x1,y1,x2,y2,current.colourcode);
-    // if(vertical){
-    //     if(paint && current.left!=null){ 
-    //         paintNode(current.left,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100),false,true);
-    //         paintNode(current.left,codels,x1,Math.floor((y2-y1)*current.left.percentage/100+y1),x2,y2-((y2-y1)*current.percentage/100),false,false);
-    //     }
-    //     if(!paint && current.right!=null){
-    //         paintNode(current.right,codels,x1,y1,x2,Math.floor((y2-y1)*current.right.percentage/100),false,false);
-    //         paintNode(current.right,codels,x1,Math.floor((y2-y1)*current.right.percentage/100+y1),x2,y2-((y2-y1)*current.percentage/100),false,true);
-    //     }
-    // }else{
-    //     if(paint && current.left!=null){
-    //         paintNode(current.left,codels,x1,y1,Math.floor((x2-x1)*current.left.percentage/100),y2,true, true);
-    //         paintNode(current.left,codels,Math.floor((x2-x1)*current.left.percentage/100+x1),y1,x2-((x2-x1)*current.percentage/100),y2,true, false);
-    //     }
-    //     if(!paint && current.right!=null){
-    //         paintNode(current.right,codels,x1,y1,Math.floor((x2-x1)*current.right.percentage/100),y2,true, false);
-    //         paintNode(current.right,codels,Math.floor((x2-x1)*current.right.percentage/100+x1),y1,x2-((x2-x1)*current.percentage/100),y2,true,true);
-    //     }
-    // }
     if(vertical){
         if(paint && current.left!=null){ 
             paintNode(current.left,codels,x1,y1,x2,Math.floor((y2-y1)*current.left.percentage/100+y1),false,true);
@@ -209,15 +182,10 @@ function paintNode(current,codels,x1,y1,x2,y2,vertical,paint){
 
         }
     }
+    return codels;
 }
-// function paintTraversal(current,prev,codels) // https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
-//     {
-//         codels = paintRect(codels,0,0,current.percentage,100,current.colourcode)
-//         if(current.left != null)paintTraversal(current.left, codels)
-//         if(current.right != null)paintTraversal(current.right,codels)
-//     }
 function paintRect(codels, x1,y1, x2, y2,score){
-    console.log(x1 + "," + y1 +"," + x2 +"," + y2 + " colour: " + score)
+    //console.log(x1 + "," + y1 +"," + x2 +"," + y2 + " colour: " + score)
     //UPDATE SCORES ARRAY - for execution
     // if(x1>x2){temp = x1;x1=x2;x2=temp;}
     // if(y1>y2){temp = y1;y1=y2;y2=temp;}
@@ -246,7 +214,7 @@ function paintRect(codels, x1,y1, x2, y2,score){
     }else ctx.fillStyle = "white";
     //console.log(x1 + "," + y1 +"," + x2 +"," + y2 + " colour: " + score)
 
-    ctx.fillRect(x1*codelWidth,y1*codelHeight,((x2-1)*codelWidth),((y2-y1)*codelHeight));
+    ctx.fillRect(x1*codelWidth,y1*codelHeight,((x2-x1)*codelWidth),((y2-y1)*codelHeight));
 
     return codels;
 }
@@ -278,27 +246,103 @@ function getPercentage(score){
 
 //     }
 // }
-
+function switchDirection(xin,yin){
+    if(xin == 1){ //moving right, move down
+        xin = 0;
+        yin = 1;
+    }else if(yin == 1){ //moving down , move left
+        xin = -1;
+        yin = 0;
+    }else if(xin == -1){//moving left,move up
+        xin = 0;
+        yin = -1;
+    }else if(yin == -1){//moving up, move right
+        xin = 1;
+        yin = 0;
+    }
+    return [xin,yin];
+}
 function executePiet()
 {
     //clear previous outputs
-    document.getElementById("stack").innerHTML = "";
-    document.getElementById("output").innerHTML = "";
+    document.getElementById("stack").innerHTML = ""; //print intermediate phases?
+    document.getElementById("output").innerHTML = ""; //debugging output 
     document.getElementById("pietOutput").innerHTML = "";
+    codels = paintPiet(getScores())
 
-
-    //document.getElementById("output").innerHTML = "running"
-    let scores = getScores(); //may be redundant - could pass to func instead
-    let stack = []; let changes = [];
-    //let registers = [];
-    let colourBlockCount = 1;
-    for(let i = 0;i < scores.length-1;i++)
+    let changes = [];
+    let stack = [];
+    let colourBlockCount = 0;
+    let xin = 1;//initially moves right from top left corner
+    let yin = 0;
+    let numRounds = 0; 
+    let lim = 4; //limit number of loops - avoid infinite loop crash
+    //pad array? -1
+    let x = 0,y = 0;
+    let canvas = document.getElementById("pietCanvas");
+    let ctx = canvas.getContext("2d");
+    while(x>=0 && x<codels.length && y>=0 && y<codels.length)//lefthand corner to right 
     {
-        let change = Colours.getColourChange(scores[i], scores[i+1]);
-        changes.push(change);
-        if(change[0] == 0 && change[1] == 0) colourBlockCount++; //if no change in hue or lightness, increment block size counter
-        else  //if new colour block
-        {
+        x+=xin; //increment x value
+        y+=yin; //increment y value
+        if(x+xin>= codels.length || y+yin>=codels.length || x+xin<0 || y+yin<0){ //if on border, change direction
+            [xin,yin] = switchDirection(xin,yin);
+            //console.log("SWITCH: " + x + ", " + y + " in: " + xin + ", " + yin);
+
+            numRounds++;
+            if(numRounds==lim){
+                break;
+            }
+        }else{ //if not on border, calculate change in hue/lightness
+            let change = [-1,-1]
+            try{
+                change = Colours.getColourChange(codels[x][y],codels[x+xin][y+yin]);
+                //draw execution path
+                ctx.beginPath();
+                ctx.moveTo((x+0.5)*canvas.width/100,(y+0.5)*canvas.height/100);
+                ctx.lineTo((x+xin+0.5)*canvas.width/100,(y+yin+0.5)*canvas.height/100);
+                ctx.closePath();
+                ctx.stroke();
+            }catch(err){
+                console.log("ERROR: " + x + ", " + y);
+            }
+            if(change[0]==0 && change[1]==0){// no change - same colour
+                //console.log("+");
+                colourBlockCount++;
+            //}else if (change[0] ==-1 && change[1] == -1){//no change - error
+            }else{ //new colourblock entered
+                changes.push(change);
+                executePietOperation(change,stack,colourBlockCount,xin,yin)
+                colourBlockCount= 0;//reset block count - new colour
+            }
+        } 
+        //console.log(codels[i][0])
+    }
+    console.log("END: " + x + ", " + y + " in: " + xin + ", " + yin);
+
+    document.getElementById("stack").innerHTML = JSON.stringify(stack);
+    document.getElementById("output").innerHTML = JSON.stringify(changes);
+}
+function executePietOperation(change,stack,colourBlockCount,xin,yin)
+{
+    //clear previous outputs
+    // document.getElementById("stack").innerHTML = "";
+    // document.getElementById("output").innerHTML = "";
+    // document.getElementById("pietOutput").innerHTML = "";
+
+
+    // //document.getElementById("output").innerHTML = "running"
+    // let scores = getScores(); //may be redundant - could pass to func instead
+    // let stack = []; let changes = []; //store changes for debugging
+    // //let registers = [];
+    // let colourBlockCount = 1;
+    // for(let i = 0;i < scores.length-1;i++)
+    // {
+    //     let change = Colours.getColourChange(scores[i], scores[i+1]);
+    //     changes.push(change);
+    //     if(change[0] == 0 && change[1] == 0) colourBlockCount++; //if no change in hue or lightness, increment block size counter
+    //     else  //if new colour block
+    //     {
             let num2 = null;
             let num1 = null;
             switch(change[0]) //chose operation by change in lightness
@@ -307,6 +351,7 @@ function executePiet()
                     switch(change[1]) // choose operation by change in hue
                     {
                         case 1: //ADD Pop top two numbers, push sum to stack 
+                            console.log("ADD");
                             num1 = stack.pop();
                             num2 = stack.pop();
                             if(num1 == null && num2 == null) console.log("Addition failed: Tried to pop from empty stack");
@@ -347,6 +392,7 @@ function executePiet()
                             char = prompt("Enter a character");
                             char = char.charCodeAt(0);
                             if(char!= null) stack.push(char);
+                            else console.log("INPUT CHAR failed: null input");
                             break;
                     }
                     break;
@@ -354,10 +400,11 @@ function executePiet()
                     switch(change[1]) //choose operation by change in hue
                     {
                         case 0: //Push size of current block to stack
-                            console.log("PUSH");
+                            console.log("PUSH " + colourBlockCount);
                             stack.push(colourBlockCount);
                             break;
                         case 1: //SUB Pop top two numbers, push difference to stack (bottom-top)
+                            console.log("SUB");
                             num1 = stack.pop();
                             num2 = stack.pop();
                             if(num1 == null && num2 == null) console.log("Subtraction failed: Tried to pop from empty stack");
@@ -366,7 +413,7 @@ function executePiet()
                             else stack.push(num2 - num1);
                             break;
                         case 2: //MOD Pop top two numbers, push remainder to stack (bottom/top)
-                            console.log("MOD")
+                            console.log("MOD");
                             num1 = stack.pop();
                             num2 = stack.pop();
                             if(num1 == null && num2 == null) console.log("Modulo failed: Tried to pop from empty stack");
@@ -375,6 +422,14 @@ function executePiet()
                             else stack.push(num2 % num1);
                             break;
                         case 3://POINTER increment dp
+                            console.log("INCREMENT DP");
+                            num1 = stack.pop();
+                            if(num1 == null) console.log("POINTER Failed: Empty stack");
+                            else{
+                                for(let i = 0;i<num1;i++){
+                                    switchDirection(xin,yin);
+                                }
+                            }
                             break;
                         case 4: //aq aqpp aqpp aqpppp aqpppp aqpppp aq aq aq aqpp aqpppp ppp
                             console.log("ROLL")
@@ -412,7 +467,8 @@ function executePiet()
                         case 5://output num
                             console.log("OUTPUT NUM");
                             let num = stack.pop()
-                            if(num != null) document.getElementById("pietOutput").innerHTML = document.getElementById("pietOutput").innerHTML + num;
+                            if(num == null)console.log("OUTPUT failed: Empty stack");
+                            else document.getElementById("pietOutput").innerHTML = document.getElementById("pietOutput").innerHTML + num;
                             break;
                     }
                     break;
@@ -420,6 +476,7 @@ function executePiet()
                     switch(change[1])
                     {
                         case 0: //Pop top value from stack
+                            console.log("POP");
                             stack.pop();
                         break;
                         case 1: //MULT Pop top two numbers, push product to stack 
@@ -434,7 +491,8 @@ function executePiet()
                         case 2: //NOT Pop top value from stack, if 0 push 1, else push 0
                             console.log("NOT")
                             num1 = stack.pop();
-                            if(num1 == 0) stack.push(1);
+                            if(num1 == null)console.log("NOT failed: empty stack")
+                            else if(num1 == 0) stack.push(1);
                             else stack.push(0);
                             break;
                         case 3: //increment cc
@@ -442,29 +500,31 @@ function executePiet()
                         case 4://user input num
                             console.log("INPUT NUM");
                             num = parseInt(prompt("Enter a number"));
-                            if(num!= NaN) stack.push(num);
+                            if(num == NaN) console.log("INPUT failed: not a number");
+                            else stack.push(num);
                             //parse float?
                             break;
                         case 5://output char
                             console.log("OUTPUT CHAR");
                             num = stack.pop()
                             char = String.fromCharCode(num);
-                            if(char != null) document.getElementById("pietOutput").innerHTML = document.getElementById("pietOutput").innerHTML + char;
+                            if(char == null)console.log("OUTPUT failed: Empty stack");
+                            else document.getElementById("pietOutput").innerHTML = document.getElementById("pietOutput").innerHTML + char;
                             break;
                     }
                     break;
                     
             }
-            colourBlockCount = 1; //reset counter
-        }
-    }
-    document.getElementById("stack").innerHTML = JSON.stringify(stack);
-    document.getElementById("output").innerHTML = JSON.stringify(changes);
+    //         colourBlockCount = 1; //reset counter
+    //     }
+    // }
+    // document.getElementById("stack").innerHTML = JSON.stringify(stack);
+    // document.getElementById("output").innerHTML = JSON.stringify(changes);
 
     //console.log(changes)
 }
 function setCanvasSize(){
-    var canvas = document.getElementById("pietCanvas");
+    let canvas = document.getElementById("pietCanvas");
     canvas.width = window.innerWidth/2;
     canvas.height = window.innerHeight/2;
 
@@ -480,32 +540,37 @@ function setBeatnikInputBoxSize(){
 
     //beatBox.value = window.innerWidth
 }
-// function testTree(){
-//     let tree = new Tree();
-//     tree.insert(new Node(8,1))
-//     tree.insert(new Node(2,2))
-//     tree.insert(new Node(3,20))
-//     tree.insert(new Node(8,4))
-//     tree.insert(new Node(2,13))
-//     tree.insert(new Node(3,6))
-//     tree.insert(new Node(8,7))
-//     tree.insert(new Node(2,8))
-//     tree.insert(new Node(3,9))
-    
-//     let traversal = tree.traverse(tree.root,[])
-//     console.log(JSON.stringify(traversal))
-// }
+function displayHint1(){
+    document.getElementById("hint1Text").style.display="block";
+}
+function hideHint1(){
+    document.getElementById("hint1Text").style.display="none";
+}
+function displayHint2(){
+    document.getElementById("hint2Text").style.display="block";
+}
+function hideHint2(){
+    document.getElementById("hint2Text").style.display="none";
+}
 function init()
 {
-    // resize page elements
+    //Initialize event listeners
     document.getElementById("beatnikInput").addEventListener("resize",setBeatnikInputBoxSize);
     document.getElementById("pietCanvas").addEventListener("resize",setCanvasSize);
+    // resize page elements
     setBeatnikInputBoxSize();
     setCanvasSize();
+    //Hide hint panels
+    document.getElementById("hint1Text").style.display="none";
+    document.getElementById("hint2Text").style.display="none";
     // add event listeners to input elements
     document.getElementById("beatnikInput").addEventListener("input",getScores);
     document.getElementById("runButton").addEventListener("click",executePiet);
-    //testTree()
+    // add event listeners to hint buttons
+    document.getElementById("hint1").addEventListener("mouseover",displayHint1);
+    document.getElementById("hint1").addEventListener("mouseout",hideHint1);
+    document.getElementById("hint2").addEventListener("mouseover",displayHint2);
+    document.getElementById("hint2").addEventListener("mouseout",hideHint2);
 }
 
 window.onload = init;
