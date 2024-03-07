@@ -57,13 +57,14 @@ textarea{
     
 }
 
-#hint1Text{
+.hintText{
     position: fixed;
     width: 47%;
     padding: 0.7%;
     object-fit: contain;
 }
-#hint1{
+.hint{
     position: relative;
     float: right;
+    width: fit-content;
 }
