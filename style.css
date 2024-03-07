@@ -53,4 +53,17 @@ textarea{
 .label{
     padding: 3px;
     background-color: lightgray;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    
+}
+
+#hint1Text{
+    position: fixed;
+    width: 47%;
+    padding: 0.7%;
+    object-fit: contain;
+}
+#hint1{
+    position: relative;
+    float: right;
 }
