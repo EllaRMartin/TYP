@@ -275,7 +275,8 @@ function executePiet()
     let colourBlockCount = 0;
     let xin = 1;//initially moves right from top left corner
     let yin = 0;
-    let numRounds = 0; lim = 5; //limit number of loops - avoid infinite loop crash
+    let numRounds = 0; 
+    let lim = 4; //limit number of loops - avoid infinite loop crash
     //pad array? -1
     let x = 0,y = 0;
     let canvas = document.getElementById("pietCanvas");
@@ -298,8 +299,8 @@ function executePiet()
                 change = Colours.getColourChange(codels[x][y],codels[x+xin][y+yin]);
                 //draw execution path
                 ctx.beginPath();
-                ctx.moveTo(x*canvas.width/100,y*canvas.height/100);
-                ctx.lineTo((x+xin)*canvas.width/100,(y+yin)*canvas.height/100);
+                ctx.moveTo((x+0.5)*canvas.width/100,(y+0.5)*canvas.height/100);
+                ctx.lineTo((x+xin+0.5)*canvas.width/100,(y+yin+0.5)*canvas.height/100);
                 ctx.closePath();
                 ctx.stroke();
             }catch(err){
