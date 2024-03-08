@@ -541,16 +541,16 @@ function setBeatnikInputBoxSize(){
     //beatBox.value = window.innerWidth
 }
 function displayHint1(){
-    document.getElementById("hint1Text").style.display="block";
+    document.getElementById("hint1").style.display="block";
 }
 function hideHint1(){
-    document.getElementById("hint1Text").style.display="none";
+    document.getElementById("hint1").style.display="none";
 }
 function displayHint2(){
-    document.getElementById("hint2Text").style.display="block";
+    document.getElementById("hint2").style.display="block";
 }
 function hideHint2(){
-    document.getElementById("hint2Text").style.display="none";
+    document.getElementById("hint2").style.display="none";
 }
 function init()
 {
@@ -561,12 +561,16 @@ function init()
     setBeatnikInputBoxSize();
     setCanvasSize();
     //Hide hint panels
-    document.getElementById("hint1Text").style.display="none";
-    document.getElementById("hint2Text").style.display="none";
+    document.getElementById("hint1").style.display="none";
+    document.getElementById("hint2").style.display="none";
     // add event listeners to input elements
     document.getElementById("beatnikInput").addEventListener("input",getScores);
     document.getElementById("runButton").addEventListener("click",executePiet);
     // add event listeners to hint buttons
+    document.getElementById("hintButton1").addEventListener("mouseover",displayHint1);
+    document.getElementById("hintButton1").addEventListener("mouseout",hideHint1);
+    document.getElementById("hintButton2").addEventListener("mouseover",displayHint2);
+    document.getElementById("hintButton2").addEventListener("mouseout",hideHint2);
     document.getElementById("hint1").addEventListener("mouseover",displayHint1);
     document.getElementById("hint1").addEventListener("mouseout",hideHint1);
     document.getElementById("hint2").addEventListener("mouseover",displayHint2);
