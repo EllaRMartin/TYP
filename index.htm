@@ -22,14 +22,18 @@
         <div class= "horizontal-flex-container">
             <div class = "flex-item">
                 <!--<label for="beatnikInput" class="label">Enter text here </label>-->
-                <button type="button" id="hintButton1" class = "hintButton">?</button>
-                <img src="Hint1.png" id = "hint1" class="hint">
+                <div class = "button">
+                    <button type="button" id="hintButton1" class = "hintButton">?</button>
+                    <img src="Hint1.png" id = "hint1" class="hint">
+                </div>
                 <textarea id = "beatnikInput" defaultValue = "Enter text here"></textarea>
             </div>
             <div class = "flex-item">
                 <div class="vertical-flex-item">
-                    <button type="button" id="hintButton2" class="hintButton">?</button>
-                    <img src="Hint2.png" id = "hint2" class="hint">
+                    <div class = "button">
+                        <button type="button" id="hintButton2" class="hintButton">?</button>
+                        <img src="Hint2.png" id = "hint2" class="hint">
+                    </div>
                     <canvas id="pietCanvas" ></canvas> 
                     <button type="button" id = "runButton">Run</button>
                     <label for="stack" class = "label">Stack</label><br>

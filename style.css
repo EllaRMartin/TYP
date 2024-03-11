@@ -70,3 +70,6 @@ textarea{
     /*float: right;*/
     width: fit-content;
 }
+.button{
+    text-align: right;
+}
