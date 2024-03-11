@@ -265,7 +265,7 @@ function switchDirection(xin,yin){
 function executePiet()
 {
     //clear previous outputs
-    document.getElementById("stack").innerHTML = ""; //print intermediate phases?
+    document.getElementById("stack").innerHTML = ""; 
     document.getElementById("output").innerHTML = ""; //debugging output 
     document.getElementById("pietOutput").innerHTML = "";
     codels = paintPiet(getScores())
@@ -313,6 +313,9 @@ function executePiet()
             }else{ //new colourblock entered
                 changes.push(change);
                 executePietOperation(change,stack,colourBlockCount,xin,yin)
+                if(document.getElementById("stack").innerHTML!== stack){
+                    document.getElementById("stack").innerHTML = document.getElementById("stack").innerHTML + "\n" + JSON.stringify(stack);
+                }
                 colourBlockCount= 0;//reset block count - new colour
             }
         } 
@@ -320,29 +323,10 @@ function executePiet()
     }
     console.log("END: " + x + ", " + y + " in: " + xin + ", " + yin);
 
-    document.getElementById("stack").innerHTML = JSON.stringify(stack);
     document.getElementById("output").innerHTML = JSON.stringify(changes);
 }
 function executePietOperation(change,stack,colourBlockCount,xin,yin)
 {
-    //clear previous outputs
-    // document.getElementById("stack").innerHTML = "";
-    // document.getElementById("output").innerHTML = "";
-    // document.getElementById("pietOutput").innerHTML = "";
-
-
-    // //document.getElementById("output").innerHTML = "running"
-    // let scores = getScores(); //may be redundant - could pass to func instead
-    // let stack = []; let changes = []; //store changes for debugging
-    // //let registers = [];
-    // let colourBlockCount = 1;
-    // for(let i = 0;i < scores.length-1;i++)
-    // {
-    //     let change = Colours.getColourChange(scores[i], scores[i+1]);
-    //     changes.push(change);
-    //     if(change[0] == 0 && change[1] == 0) colourBlockCount++; //if no change in hue or lightness, increment block size counter
-    //     else  //if new colour block
-    //     {
             let num2 = null;
             let num1 = null;
             switch(change[0]) //chose operation by change in lightness
