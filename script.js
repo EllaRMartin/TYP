@@ -225,27 +225,6 @@ function getPercentage(score){
     return percentage;
 }
 
-
-// function repaint(codels)
-// {
-//     let canvas = document.getElementById("pietCanvas");
-//     let ctx = canvas.getContext("2d");
-//     let codelWidth = canvas.width/100;
-
-//     for(let x = 0;x<=100;x++){
-//         for(let y = 0;y<=100;y++){
-//             c = codels[x][y];
-//             if(c!=null && c!=0 ){
-//                 ctx.fillStyle = Colours.getColour(Colours.getLightness(c),Colours.getHue(c));
-//             //     console.log(c)
-//             // console.log(Colours.getHue(c))
-//             }
-//             else ctx.fillStyle = "white";
-//             ctx.fillRect(x*codelWidth,y*codelWidth,(x*codelWidth)+codelWidth,(y*codelWidth)+codelWidth);
-//         }
-
-//     }
-// }
 function switchDirection(xin,yin){
     if(xin == 1){ //moving right, move down
         xin = 0;
@@ -559,6 +538,10 @@ function init()
     document.getElementById("hint1").addEventListener("mouseout",hideHint1);
     document.getElementById("hint2").addEventListener("mouseover",displayHint2);
     document.getElementById("hint2").addEventListener("mouseout",hideHint2);
+
+    //hide debugging info 
+    document.getElementById("output").style.display="none";
+
 }
 
 window.onload = init;
